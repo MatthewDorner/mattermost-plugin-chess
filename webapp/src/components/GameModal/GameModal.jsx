@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal } from 'react-bootstrap';
-import ChessboardJs from 'react-chessboardjs-wrapper';
 import Chessboard from 'chessboardjs';
 import Chess from 'chess.js';
 import './chessboard.css';
