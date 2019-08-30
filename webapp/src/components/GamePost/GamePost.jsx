@@ -37,7 +37,7 @@ export default class GamePost extends React.PureComponent {
                         {mostRecentMove}
                     </span>
                 </div>
-                <div>
+                {/* <div>
                     <span>
                         Black To Move: {gameState.blackToMove ? 'true' : 'false'}
                     </span>
@@ -51,9 +51,9 @@ export default class GamePost extends React.PureComponent {
                     <span>
                         History: {gameState.pgn}
                     </span>
-                </div>
+                </div> */}
                 <div>
-                    <a onClick={this.handleReply}>Reply</a>
+                    <a onClick={this.handleReply}>Open Game</a>
                 </div>
             </div>
         );

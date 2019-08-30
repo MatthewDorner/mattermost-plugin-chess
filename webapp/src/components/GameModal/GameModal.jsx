@@ -8,20 +8,6 @@ import './fixes.css';
 import getSiteURLFromWindowObject from '../../utils/GetSiteUrlFromWindowObject';
 import GameHistory from '../GameHistory.jsx';
 
-import imagefilepath from './chesspieces/wikipedia/bB.png';
-import './chesspieces/wikipedia/bK.png';
-import './chesspieces/wikipedia/bN.png';
-import './chesspieces/wikipedia/bP.png';
-import './chesspieces/wikipedia/bQ.png';
-import './chesspieces/wikipedia/bR.png';
-import './chesspieces/wikipedia/wB.png';
-import './chesspieces/wikipedia/wK.png';
-import './chesspieces/wikipedia/wN.png';
-import './chesspieces/wikipedia/wP.png';
-import './chesspieces/wikipedia/wQ.png';
-import './chesspieces/wikipedia/wR.png';
-
-
 export default class GameModal extends React.PureComponent {
 
     constructor(props) {
@@ -34,7 +20,7 @@ export default class GameModal extends React.PureComponent {
         window.ChessBoard = Chessboard;
         this.state = {
             historyState: this.historyStates.CURRENT_MOVE
-        }
+        };
     }
 
     static propTypes = {
@@ -69,8 +55,6 @@ export default class GameModal extends React.PureComponent {
         this.props.setGameModalVisibility(false);
     }
 
-
-
     onDragStart = (source, piece, position, orientation) => {
         console.log('onDragStart, this was: ');
         console.log(this);
@@ -84,14 +68,13 @@ export default class GameModal extends React.PureComponent {
             return false
         }
 
+        // to implement:
         // only pick up piece if YOU are the side to move
-
         // only pick up if you're not browsing game history and are on
         // the current move instead.
-
     }
       
-    onDrop = (source, target) => {
+    onDrop = async (source, target) => {
         // see if the move is legal
         var move = this._game.move({
             from: source,
@@ -102,47 +85,17 @@ export default class GameModal extends React.PureComponent {
         // illegal move
         if (move === null) return 'snapback'
       
-        this.updateStatus()
-    }
-      
-    // update the board position after the piece snap
-    // for castling, en passant, pawn promotion
-    onSnapEnd = () => {
-        this._board.position(this._game.fen())
-    }
-      
-    updateStatus = async () => {
-        var status = ''
-      
-        var blackToMove = false;
-        if (this._game.turn() === 'b') {
-            blackToMove = true;
-        }
-      
-        // checkmate?
-        if (this._game.in_checkmate()) {
-            status = 'Game over, ' + blackToMove + ' is in checkmate.'
-        }
-      
-        // draw?
-        else if (this._game.in_draw()) {
-            status = 'Game over, drawn position'
-        }
-      
-        // game still on
-        else {
-            status = blackToMove + ' to move'
-      
-            // check?
-            if (this._game.in_check()) {
-                status += ', ' + blackToMove + ' is in check'
-            }
-        }
+        /*
+            this._game.turn() === 'b' means it's black's turn
+            this._game.in_checkmate()
+            this._game.in_draw()
+            this._game.in_check()
+        */
 
-        let newGameState = {
-            playerWhite: this.getMostRecentGameState().playerWhite,
-            playerBlack: this.getMostRecentGameState().playerBlack,
-            blackToMove,
+       let newGameState = {
+            playerWhite: this.state.gameState.playerWhite,
+            playerBlack: this.state.gameState.playerBlack,
+            blackToMove: this._game.turn() === 'b' ? true : false,
             pgn: this._game.pgn()
         }
         let gamePostMessage = JSON.stringify(newGameState);
@@ -161,9 +114,14 @@ export default class GameModal extends React.PureComponent {
         post.props = {};
         post.type = 'custom_chess-game-post';
         await this.props.createPost(post);
-        
     }
-
+      
+    // update the board position after the piece snap
+    // for castling, en passant, pawn promotion
+    onSnapEnd = () => {
+        this._board.position(this._game.fen())
+    }
+      
     setHistoryState = (fen, historyState) => {
         console.log('in setHistoryState, this was');
         console.log(this);
@@ -174,44 +132,27 @@ export default class GameModal extends React.PureComponent {
         this._board.position(fen);
     }
 
-    /*
-        mostRecentGameState needs to be in Redux state, since it's gotten everywhere
-
-        historyState could be... kept in here?
-
-        how are you supposed to implement something that's derived from a prop? specifically
-        when the prop is redux state.
-
-        oh it's getDerivedStateFromProps
-
-        "If you’re using derived state to memoize some computation based only on the current
-        props, you don’t need derived state. See What about memoization? below." from some
-        redux site.
-
-    */
-
-    getMostRecentGameState() {
-
-        if (this.props.postsInCurrentChannel) {
-            for (var i = 0; i < this.props.postsInCurrentChannel.length; i++) {
-                let post = this.props.postsInCurrentChannel[i];
-                if (post.type == 'custom_chess-game-post') {
-                    let mostRecentGameState = JSON.parse(post.message);
-                    console.log('got most recent game state: ');
-                    console.log(mostRecentGameState);
-                    return mostRecentGameState;
-                }
+   static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.postsInCurrentChannel) {
+        for (var i = 0; i < nextProps.postsInCurrentChannel.length; i++) {
+            let post = nextProps.postsInCurrentChannel[i];
+            if (post.type == 'custom_chess-game-post') {
+                let gameState = JSON.parse(post.message);
+                console.log('in getDerivedStateFromProps, got game state: ');
+                console.log(gameState);
+                return { gameState };
             }
         }
     }
 
+    return null;
+  }
+
     componentDidUpdate() {
-        // this runs after render
+        // this runs after render, important since the chessboard can only be set up
+        // once the element with id 'chessboard' is already in the DOM
         if (this.props.visibility) {
             window.requestAnimationFrame(() => {
-
-                // this._game = new Chess();
-                // this._game.load_pgn(this.getMostRecentGameState().pgn);
 
                 console.log('in componentDidUpdate, this was:');
                 console.log(this);
@@ -227,7 +168,7 @@ export default class GameModal extends React.PureComponent {
                     onSnapEnd: this.onSnapEnd
                 }
     
-                if (this.getMostRecentGameState().pgn == '') {
+                if (this.state.gameState.pgn == '') {
                     config.position = 'start';
                 } else {
                     config.position = this._game.fen();
@@ -257,8 +198,6 @@ export default class GameModal extends React.PureComponent {
             "float": "right"
         };
 
-
-
         // PREPARE HISTORY FOR HISTORY BROWSER
         let history = [];
         console.log('checking this._game');
@@ -269,9 +208,9 @@ export default class GameModal extends React.PureComponent {
         // bad... why is it undefined sometimes?
         this._game = new Chess();
 
-        var gameState = this.getMostRecentGameState();
-        if (gameState) {
-            this._game.load_pgn(this.getMostRecentGameState().pgn);
+        // var gameState = this.getMostRecentGameState();
+        if (this.state.gameState) {
+            this._game.load_pgn(this.state.gameState.pgn);
         }
 
         if (this._game) {
