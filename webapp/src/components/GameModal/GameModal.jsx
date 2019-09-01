@@ -13,6 +13,8 @@ export default class GameModal extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        this.state = {
+        };
         window.ChessBoard = Chessboard;
     }
 
