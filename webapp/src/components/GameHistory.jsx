@@ -59,28 +59,36 @@ export default class GameHistory extends React.PureComponent {
       };
 
       let historySelect = {
-          "width": "95%"
+          "width": "95%",
+          "height": "285px"
       }
 
       let historyControlsStyle = {};
 
+      let historyButtonStyle = {
+        "width": "23%"
+      };
+
       const historyItems = this.props.history.map((historyItem, index) => {
+        let formattedMovePgn = index % 2 ? "... " + this.props.history[index].movePgn : (index / 2 + 1) + '. ' + this.props.history[index].movePgn;
+
         if (index == this.state.historyIndex) {
-          return (<option value={historyItem.movePgn} selected>{historyItem.movePgn}</option>);
+          return (<option value={historyItem.movePgn} selected>{formattedMovePgn}</option>);
         } else {
-          return (<option value={historyItem.movePgn}>{historyItem.movePgn}</option>);
+          return (<option value={historyItem.movePgn}>{formattedMovePgn}</option>);
         }
       });
 
       return (
         <div>
           <div style={historyContainer}>
-            <select multiple size='13' className='form-control' style={historySelect}>
+            <select multiple className='form-control' style={historySelect}>
               {historyItems}
             </select>
 
             <div style={historyControlsStyle}>
             <button
+                  style={historyButtonStyle}
                   type='button'
                   className='btn btn-primary'
                   onClick={() => this.handleTransport('start')}
@@ -88,6 +96,7 @@ export default class GameHistory extends React.PureComponent {
                   {'<<'}
               </button>
               <button
+                  style={historyButtonStyle}
                   type='button'
                   className='btn btn-primary'
                   onClick={() => this.handleTransport('previous')}
@@ -95,6 +104,7 @@ export default class GameHistory extends React.PureComponent {
                   {'<'}
               </button>          
               <button
+                  style={historyButtonStyle}
                   type='button'
                   className='btn btn-primary'
                   onClick={() => this.handleTransport('next')}
@@ -102,6 +112,7 @@ export default class GameHistory extends React.PureComponent {
                   {'>'}
               </button>
               <button
+                  style={historyButtonStyle}
                   type='button'
                   className='btn btn-primary'
                   onClick={() => this.handleTransport('current')}

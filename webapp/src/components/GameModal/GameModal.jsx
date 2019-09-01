@@ -45,12 +45,6 @@ export default class GameModal extends React.PureComponent {
         this.props.setGameModalVisibility(false);
     }
 
-    /*
-        why is 'this._game' able to work here? I thought the onDragstart and
-        similar methods are applied to the _board object so how are they able to
-        use 'this._game'????
-    */
-
     onDragStart = (source, piece, position, orientation) => {
         console.log('onDragStart, this was: ');
         console.log(this);
@@ -185,6 +179,11 @@ export default class GameModal extends React.PureComponent {
             }
             history.push(historyItem);
         });
+
+        let titleString = '';
+        if (this.state.gameState) {
+            titleString = 'Chess: ' + this.state.gameState.playerWhite.name + ' VS ' + this.state.gameState.playerBlack.name;
+        }
             
         return (
             <Modal
@@ -199,8 +198,7 @@ export default class GameModal extends React.PureComponent {
                         componentClass='h1'
                         id='mattermost-chess_GameModalLabel'
                     >
-                        {/* Chess: {gameState.playerWhite} VS {gameState.playerBlack} */}
-                        Chess
+                        {titleString}
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>

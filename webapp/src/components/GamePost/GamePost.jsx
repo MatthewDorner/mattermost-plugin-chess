@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import getSiteURLFromWindowObject from '../../utils/GetSiteUrlFromWindowObject';
 
 export default class GamePost extends React.PureComponent {
 
@@ -13,25 +14,61 @@ export default class GamePost extends React.PureComponent {
     }
 
     render() {
-
         let gameState = JSON.parse(this.props.post.message);
         let previousPlayer = gameState.blackToMove ? gameState.playerBlack.name : gameState.playerWhite.name;
 
-        let mostRecentMove;
+        let siteUrl = getSiteURLFromWindowObject(window);
+
+        let pieceIconStyle = {
+            'display': 'inline',
+            'width': '25px'
+        };
+
+        let content;
+
         if (gameState.pgn == '') {
-            mostRecentMove = 'New Game';
+            content = (
+                <span>
+                    New Game
+                </span>
+            );
         } else {
-            mostRecentMove = previousPlayer + ' played: ' + gameState.pgn.split(' ').slice(-1)[0];
+            let recentColor = gameState.blackToMove ? 'b' : 'w';
+            let recentPiece = gameState.pgn.split(' ').slice(-1)[0].charAt(0);
+
+            // also need to handle castle
+            switch (recentPiece) {
+                case 'a':
+                case 'b':
+                case 'c':
+                case 'd':
+                case 'e':
+                case 'f':
+                case 'g':
+                case 'h':
+                    recentPiece = 'P';
+                    break;
+                default:
+                    break;
+            }
+
+            let pieceUrl = siteUrl + '/static/plugins/com.example.mattermost-chess/' + recentColor + recentPiece + '.png';
+            console.log('got the pieceUrl, it was: ' + pieceUrl);
+    
+            content = (
+                <span>
+                    <img src={pieceUrl} style={pieceIconStyle}></img>
+                    {gameState.pgn.split(' ').slice(-1)[0]}
+                </span>
+            );
         }
 
         return (
             <div>
                 <div>
-                    <span>
-                        {mostRecentMove}
+                    <span style={{'margin': '5px'}}>
+                        {content}
                     </span>
-                </div>
-                <div>
                     <a onClick={this.handleReply}>Open Game</a>
                 </div>
             </div>
