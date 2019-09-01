@@ -1,7 +1,7 @@
 # mattermost-plugin-chess
 Chess plugin for Mattermost
 
-![mattermostpluginchess](https://user-images.githubusercontent.com/36939751/63940432-0fde2080-ca2f-11e9-8a97-04cf3c9872d9.png)
+![screenshot](https://user-images.githubusercontent.com/36939751/64083483-51e4bc00-cce6-11e9-8dbd-c358588f279f.png)
 
 This plugin will allow Mattermost users to have their conversations over a game of chess.
 The plugin is only for the Mattermost frontend and doesn't make any changes to the server.
