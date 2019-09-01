@@ -21,7 +21,7 @@ export default class GamePost extends React.PureComponent {
 
         let pieceIconStyle = {
             'display': 'inline',
-            'width': '25px'
+            'width': '20px'
         };
 
         let content;

@@ -66,7 +66,8 @@ export default class GameHistory extends React.PureComponent {
       let historyControlsStyle = {};
 
       let historyButtonStyle = {
-        "width": "23%"
+        "width": "23.7%",
+        "margin-top": "8px"
       };
 
       const historyItems = this.props.history.map((historyItem, index) => {
