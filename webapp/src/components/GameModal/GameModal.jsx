@@ -11,27 +11,15 @@ import GameHistory from '../GameHistory.jsx';
 export default class GameModal extends React.PureComponent {
 
     constructor(props) {
-
         super(props);
 
-        console.log('got props in GameModal constructor:');
-        console.log(props);
-
         window.ChessBoard = Chessboard;
-        this.state = {
-            historyState: this.historyStates.CURRENT_MOVE
-        };
     }
 
     static propTypes = {
         visibility: PropTypes.bool.isRequired,
         setGameModalVisibility: PropTypes.func.isRequired,
         createPost: PropTypes.func.isRequired
-    }
-
-    historyStates = {
-        CURRENT_MOVE: 'CURRENT',
-        HISTORICAL_MOVE: 'HISTORICAL_MOVE'
     }
 
     /*
@@ -55,6 +43,12 @@ export default class GameModal extends React.PureComponent {
         this.props.setGameModalVisibility(false);
     }
 
+    /*
+        why is 'this._game' able to work here? I thought the onDragstart and
+        similar methods are applied to the _board object so how are they able to
+        use 'this._game'????
+    */
+
     onDragStart = (source, piece, position, orientation) => {
         console.log('onDragStart, this was: ');
         console.log(this);
@@ -75,6 +69,7 @@ export default class GameModal extends React.PureComponent {
     }
       
     onDrop = async (source, target) => {
+
         // see if the move is legal
         var move = this._game.move({
             from: source,
@@ -98,21 +93,22 @@ export default class GameModal extends React.PureComponent {
             blackToMove: this._game.turn() === 'b' ? true : false,
             pgn: this._game.pgn()
         }
-        let gamePostMessage = JSON.stringify(newGameState);
-        let post = {
-            message: gamePostMessage
-        };
-        post.channel_id = this.props.currentChannelId;
+
         const time = Date.now();
         const userId = this.props.currentUserId;
-        post.pending_post_id = `${userId}:${time}`;
-        post.user_id = userId;
-        post.create_at = time;
-        // post.parent_id = this.state.parentId;
-        post.parent_id = undefined; // what is this?
-        post.metadata = {};
-        post.props = {};
-        post.type = 'custom_chess-game-post';
+
+        let post = {
+            message: JSON.stringify(newGameState),
+            channel_id: this.props.currentChannelId,
+            pending_post_id: `${userId}:${time}`,
+            user_id: userId,
+            create_at: time,
+            parent_id: undefined,
+            metadata: {},
+            props: {},
+            type: 'custom_chess-game-post'
+        };
+
         await this.props.createPost(post);
     }
       
@@ -123,39 +119,26 @@ export default class GameModal extends React.PureComponent {
     }
       
     setHistoryState = (fen, historyState) => {
-        console.log('in setHistoryState, this was');
-        console.log(this);
-        // this.setState({
-        //     historyState
-        // });
-
         this._board.position(fen);
     }
 
    static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.postsInCurrentChannel) {
-        for (var i = 0; i < nextProps.postsInCurrentChannel.length; i++) {
-            let post = nextProps.postsInCurrentChannel[i];
-            if (post.type == 'custom_chess-game-post') {
-                let gameState = JSON.parse(post.message);
-                console.log('in getDerivedStateFromProps, got game state: ');
-                console.log(gameState);
-                return { gameState };
+        if (nextProps.postsInCurrentChannel) {
+            for (var i = 0; i < nextProps.postsInCurrentChannel.length; i++) {
+                let post = nextProps.postsInCurrentChannel[i];
+                if (post.type == 'custom_chess-game-post') {
+                    return { gameState: JSON.parse(post.message) };
+                }
             }
         }
+        return null;
     }
-
-    return null;
-  }
 
     componentDidUpdate() {
         // this runs after render, important since the chessboard can only be set up
         // once the element with id 'chessboard' is already in the DOM
         if (this.props.visibility) {
             window.requestAnimationFrame(() => {
-
-                console.log('in componentDidUpdate, this was:');
-                console.log(this);
 
                 let siteUrl = getSiteURLFromWindowObject(window);
                 let pieceTheme = siteUrl + '/static/plugins/com.example.mattermost-chess/{piece}.png';
@@ -167,70 +150,39 @@ export default class GameModal extends React.PureComponent {
                     onDrop: this.onDrop,
                     onSnapEnd: this.onSnapEnd
                 }
-    
-                if (this.state.gameState.pgn == '') {
-                    config.position = 'start';
-                } else {
-                    config.position = this._game.fen();
-                }
 
+                config.position = this.state.gameState.pgn == '' ? 'start' : this._game.fen();
                 this._board = Chessboard('chessboard', config);
             });
         }
     }
 
     render() {
-        let cancelButton;
-        if (!this.props.hideCancel) {
-            cancelButton = (
-                <button
-                    type='button'
-                    className='btn btn-link btn-cancel'
-                    onClick={this.handleCancel}
-                >
-                    Cancel
-                </button>
-            );
-        }
 
         let boardStyle = {
             "width": "50%",
             "float": "right"
         };
 
-        // PREPARE HISTORY FOR HISTORY BROWSER
-        let history = [];
-        console.log('checking this._game');
-        console.log(this._game);
-        console.log('what is this');
-        console.log(this);
-
-        // bad... why is it undefined sometimes?
         this._game = new Chess();
 
-        // var gameState = this.getMostRecentGameState();
         if (this.state.gameState) {
             this._game.load_pgn(this.state.gameState.pgn);
         }
 
-        if (this._game) {
-            console.log('THIS._game was true');
-            var moves = this._game.history();
-            var newGame = new Chess();
-            moves.forEach((move) => {
-                newGame.move(move);
-                // fens.push(newGame.fen());
-    
-                // actually, I need newMove in pgn form, not ... so,,,
-                let movePgn = newGame.pgn().split(' ').slice(-1)[0];
-    
-                let historyItem = {
-                    movePgn: movePgn,
-                    fen: newGame.fen()                
-                }
-                history.push(historyItem);
-            });
-        }
+        // PREPARE HISTORY FOR HISTORY BROWSER
+        let history = [];
+        var moves = this._game.history();
+        var newGame = new Chess();
+        moves.forEach((move) => {
+            newGame.move(move);
+            let movePgn = newGame.pgn().split(' ').slice(-1)[0];
+            let historyItem = {
+                movePgn: movePgn,
+                fen: newGame.fen()                
+            }
+            history.push(historyItem);
+        });
             
         return (
             <Modal
@@ -254,7 +206,13 @@ export default class GameModal extends React.PureComponent {
                     <div id='chessboard' style={boardStyle}></div>
                 </Modal.Body>
                 <Modal.Footer>
-                    {cancelButton}
+                    <button
+                        type='button'
+                        className='btn btn-link btn-cancel'
+                        onClick={this.handleCancel}
+                    >
+                        Cancel
+                    </button>
                 </Modal.Footer>
             </Modal>
         );

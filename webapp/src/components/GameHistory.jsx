@@ -1,22 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import { Modal } from 'react-bootstrap';
-// import ChessboardJs from 'react-chessboardjs-wrapper';
-// import Chessboard from 'chessboardjs';
-// import Chess from 'chess.js';
-// import './chessboard.css';
-// import './fixes.css';
-// import getSiteURLFromWindowObject from '../../utils/GetSiteUrlFromWindowObject';
 
 export default class GameHistory extends React.PureComponent {
 
     constructor(props) {
-
         super(props);
 
-        // maybe historyState should be in redux, but for now.
         this.state = {
-            historyState: this.historyStates.CURRENT_MOVE,
             historyIndex: props.history.length - 1
         }
     }
@@ -25,12 +15,6 @@ export default class GameHistory extends React.PureComponent {
         visibility: PropTypes.bool.isRequired,
         setGameModalVisibility: PropTypes.func.isRequired,
         createPost: PropTypes.func.isRequired
-    }
-
-    // move this to separate module
-    historyStates = {
-        CURRENT_MOVE: 'CURRENT',
-        HISTORICAL_MOVE: 'HISTORICAL_MOVE'
     }
 
     handleTransport = (direction) => {
@@ -66,14 +50,6 @@ export default class GameHistory extends React.PureComponent {
     
     }
 
-
-    /*
-      props:
-      setHistoryState(fen, historyState)
-      history: {movePgn, fen}
-
-    */
-
     render() {
 
       let historyContainer = {
@@ -86,19 +62,7 @@ export default class GameHistory extends React.PureComponent {
           "width": "95%"
       }
 
-      let historyControls = {};
-
-      /*
-        will keep historyState in this component's state... but need to
-        use the setHistoryState action to send it up so the board can get set
-
-        what does this component need to do?
-          - need to keep track of which historyItem is selected
-          - need to update when you select a different one
-
-      */
-      
-    
+      let historyControlsStyle = {};
 
       const historyItems = this.props.history.map((historyItem, index) => {
         if (index == this.state.historyIndex) {
@@ -108,43 +72,41 @@ export default class GameHistory extends React.PureComponent {
         }
       });
 
-      console.log('in gameHistory::render, history was: ');
-      console.log(this.props.history);
-            
       return (
         <div>
           <div style={historyContainer}>
-            <select size='12' style={historySelect}>
+            <select multiple size='13' className='form-control' style={historySelect}>
               {historyItems}
             </select>
-            <div style={historyControls}>
+
+            <div style={historyControlsStyle}>
+            <button
+                  type='button'
+                  className='btn btn-primary'
+                  onClick={() => this.handleTransport('start')}
+              >
+                  {'<<'}
+              </button>
               <button
                   type='button'
                   className='btn btn-primary'
                   onClick={() => this.handleTransport('previous')}
               >
-                  Previous
+                  {'<'}
               </button>          
               <button
                   type='button'
                   className='btn btn-primary'
                   onClick={() => this.handleTransport('next')}
               >
-                  Next
-              </button>
-              <button
-                  type='button'
-                  className='btn btn-primary'
-                  onClick={() => this.handleTransport('start')}
-              >
-                  Start
+                  {'>'}
               </button>
               <button
                   type='button'
                   className='btn btn-primary'
                   onClick={() => this.handleTransport('current')}
               >
-                  Current
+                  {'>>'}
               </button>
             </div>
           </div>
