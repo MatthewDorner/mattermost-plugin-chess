@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal } from 'react-bootstrap';
-import Chessboard from 'chessboardjs';
+import ChessBoard from 'chessboardjs';
 import Chess from 'chess.js';
 import './chessboard.css';
 import './fixes.css';
@@ -12,10 +12,8 @@ export default class GameModal extends React.PureComponent {
 
     constructor(props) {
         super(props);
-
-        this.state = {
-        };
-        window.ChessBoard = Chessboard;
+        this.state = {};
+        window.ChessBoard = ChessBoard;
     }
 
     static propTypes = {
@@ -46,8 +44,6 @@ export default class GameModal extends React.PureComponent {
     }
 
     onDragStart = (source, piece, position, orientation) => {
-        console.log('onDragStart, this was: ');
-        console.log(this);
 
         // do not pick up pieces if the game is over
         if (this._game.game_over()) return false // will this count draws?
@@ -83,11 +79,19 @@ export default class GameModal extends React.PureComponent {
             this._game.in_check()
         */
 
+        let gameStatus = 'In Play';
+        if (this._game.in_checkmate()) {
+            gameStatus = 'Checkmate';
+        } else if (this._game.in_draw()) {
+            gameStatus = 'Draw';
+        }
+
        let newGameState = {
             playerWhite: this.state.gameState.playerWhite,
             playerBlack: this.state.gameState.playerBlack,
             blackToMove: this._game.turn() === 'b' ? true : false,
-            pgn: this._game.pgn()
+            pgn: this._game.pgn(),
+            gameStatus
         }
 
         const time = Date.now();
@@ -114,11 +118,11 @@ export default class GameModal extends React.PureComponent {
         this._board.position(this._game.fen())
     }
       
-    setHistoryState = (fen, historyState) => {
+    setHistoryState = (fen) => {
         this._board.position(fen);
     }
 
-   static getDerivedStateFromProps(nextProps, prevState) {
+   static getDerivedStateFromProps(nextProps) {
         if (nextProps.postsInCurrentChannel) {
             for (var i = 0; i < nextProps.postsInCurrentChannel.length; i++) {
                 let post = nextProps.postsInCurrentChannel[i];
@@ -131,8 +135,6 @@ export default class GameModal extends React.PureComponent {
     }
 
     componentDidUpdate() {
-        // this runs after render, important since the chessboard can only be set up
-        // once the element with id 'chessboard' is already in the DOM
         if (this.props.visibility) {
             window.requestAnimationFrame(() => {
 
@@ -144,11 +146,14 @@ export default class GameModal extends React.PureComponent {
                     pieceTheme,
                     onDragStart: this.onDragStart,
                     onDrop: this.onDrop,
-                    onSnapEnd: this.onSnapEnd
-                }
+                    onSnapEnd: this.onSnapEnd,
+                    position: this.state.gameState.gameStatus == 'New Game' ? 'start' : this._game.fen()
+                };
 
-                config.position = this.state.gameState.pgn == '' ? 'start' : this._game.fen();
-                this._board = Chessboard('chessboard', config);
+                this._board = ChessBoard('chessboard', config);
+                if (this.props.currentUserId == this.state.gameState.playerBlack.id) {
+                    this._board.orientation('black');
+                }
             });
         }
     }
@@ -181,6 +186,7 @@ export default class GameModal extends React.PureComponent {
         });
 
         let titleString = '';
+        // to fix: players aren't always same order as it appears in the channel title
         if (this.state.gameState) {
             titleString = 'Chess: ' + this.state.gameState.playerWhite.name + ' VS ' + this.state.gameState.playerBlack.name;
         }

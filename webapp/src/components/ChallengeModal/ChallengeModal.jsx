@@ -26,7 +26,7 @@ export default class ChallengeModal extends React.PureComponent {
             name: newChannelName, // whats diff between name & display_name
             display_name: "Chess: " + currentUserName + ' VS ' + this.props.userToChallenge.first_name,
             purpose: "to play chess",
-            header: "header blah blah",
+            header: "",
             type: General.PRIVATE_CHANNEL,
         };
         let res = await this.props.createChannel(channel);
@@ -34,12 +34,6 @@ export default class ChallengeModal extends React.PureComponent {
 
         // ADD THE CHALLENGED USER TO NEW CHANNEL
         await this.props.addChannelMember(newChannelId, this.props.userToChallenge.id);
-
-        console.log('me: ');
-        console.log(me);
-
-        console.log('userToChallenge: ');
-        console.log(this.props.userToChallenge);
 
         let mePlayer = {
             id: me.data.id,
@@ -51,18 +45,12 @@ export default class ChallengeModal extends React.PureComponent {
             name: this.props.userToChallenge.first_name
         }
 
-        console.log('CHALLEBGEMODAL');
-        console.log('mePlayer:');
-        console.log(mePlayer);
-        console.log('challengPlayer: ');
-        console.log(challengePlayer);
-
         // CREATE THE INITIAL GamePost
         let mePlaysWhite = (Math.random() < 0.5);
         let newGameState = {
             playerWhite: mePlaysWhite ? mePlayer : challengePlayer,
             playerBlack: mePlaysWhite ? challengePlayer : mePlayer,
-            recentMove: 'Created Game',
+            gameStatus: 'New Game',
             blackToMove: false,
             pgn: ''
         }
@@ -84,13 +72,11 @@ export default class ChallengeModal extends React.PureComponent {
         post.type = 'custom_chess-game-post';
         await this.props.createPost(post);
 
-        // SWITCH TO NEW CHANNEL (MAY NOT EVEN BE NECESSARY)
         // await this.props.selectChannel(newChannelId); no, because for whatever reason it fails...
         this.props.setChallengeModalVisibility(false);
     }
 
     handleCancel = () => {
-        //
         this.props.setChallengeModalVisibility(false);
     }
 

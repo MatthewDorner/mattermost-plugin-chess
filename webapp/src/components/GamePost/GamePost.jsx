@@ -15,25 +15,28 @@ export default class GamePost extends React.PureComponent {
 
     render() {
         let gameState = JSON.parse(this.props.post.message);
-        let previousPlayer = gameState.blackToMove ? gameState.playerBlack.name : gameState.playerWhite.name;
-
         let siteUrl = getSiteURLFromWindowObject(window);
 
         let pieceIconStyle = {
             'display': 'inline',
-            'width': '20px'
+            'width': '20px',
+            'marginRight': '2px',
+            'paddingBottom': '2px'
         };
 
-        let content;
+        let gameStatusStyle = {
+            'font-weight': 'bold'
+        }
 
-        if (gameState.pgn == '') {
+        let content;
+        if (gameState.gameStatus == 'New Game') {
             content = (
-                <span>
-                    New Game
+                <span style={gameStatusStyle}>
+                    Chess: New Game. {gameState.playerWhite.name} Plays First
                 </span>
             );
         } else {
-            let recentColor = gameState.blackToMove ? 'b' : 'w';
+            let recentColor = gameState.blackToMove ? 'w' : 'b';
             let recentPiece = gameState.pgn.split(' ').slice(-1)[0].charAt(0);
 
             // also need to handle castle
@@ -53,7 +56,6 @@ export default class GamePost extends React.PureComponent {
             }
 
             let pieceUrl = siteUrl + '/static/plugins/com.example.mattermost-chess/' + recentColor + recentPiece + '.png';
-            console.log('got the pieceUrl, it was: ' + pieceUrl);
     
             content = (
                 <span>
@@ -61,15 +63,28 @@ export default class GamePost extends React.PureComponent {
                     {gameState.pgn.split(' ').slice(-1)[0]}
                 </span>
             );
+
+            var status = '';
+            if (gameState.gameStatus == 'Checkmate') {
+                let previousPlayer = gameState.blackToMove ? gameState.playerWhite.name : gameState.playerBlack.name;
+                status = 'Checkmate. ' + previousPlayer + ' Won!';
+            } else if (gameState.gameStatus == 'Draw') {
+                status = 'Draw. Game Over.';
+            }
         }
 
         return (
             <div>
                 <div>
-                    <span style={{'margin': '5px'}}>
+                    <span style={{'margin-right': '5px'}}>
                         {content}
                     </span>
-                    <a onClick={this.handleReply}>Open Game</a>
+                    <a style={{'font-size': '10px'}} onClick={this.handleReply}>Open Game</a>
+                </div>
+                <div>
+                    <span style={{'font-weight': 'bold'}}>
+                        {status}
+                    </span>
                 </div>
             </div>
         );

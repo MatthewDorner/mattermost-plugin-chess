@@ -5,18 +5,27 @@ export default class GameHistory extends React.PureComponent {
 
     constructor(props) {
         super(props);
-
-        this.state = {
-            historyIndex: props.history.length - 1
-        }
+        this.state = {};
     }
 
     static propTypes = {
-        visibility: PropTypes.bool.isRequired,
-        setGameModalVisibility: PropTypes.func.isRequired,
-        createPost: PropTypes.func.isRequired
+        history: PropTypes.array.isRequired,
+        setHistoryState: PropTypes.func.isRequired
     }
 
+    // not exactly right
+    static getDerivedStateFromProps = (nextProps, prevState) => {
+      if (!prevState.history || nextProps.history.length > prevState.history.length) {
+        return {
+          historyIndex: nextProps.history.length - 1,
+          history: nextProps.history
+        };  
+      } else {
+        return null;
+      }
+    }
+
+    // transport buttons cause crash when there's no moves in the game yet
     handleTransport = (direction) => {
       let currentIndex = this.state.historyIndex;
 
@@ -31,23 +40,30 @@ export default class GameHistory extends React.PureComponent {
           currentIndex = 0;
           break;
         case 'current':
-          currentIndex = this.props.history.length - 1;
+          currentIndex = this.state.history.length - 1;
           break;
         default:
           break;
       }
 
       if (currentIndex < 0) { currentIndex = 0}
-      if (currentIndex > this.props.history.length - 1) {
-        currentIndex = this.props.history.length - 1;
+      if (currentIndex > this.state.history.length - 1) {
+        currentIndex = this.state.history.length - 1;
       }
 
       this.setState({
         historyIndex: currentIndex
       }, () => {
-        this.props.setHistoryState(this.props.history[currentIndex].fen);
+        this.props.setHistoryState(this.state.history[currentIndex].fen);
+      });    
+    }
+
+    onChange = (event) => {
+      this.setState({
+        historyIndex: parseInt(event.target.value)
+      }, () => {
+        this.props.setHistoryState(this.state.history[this.state.historyIndex].fen);
       });
-    
     }
 
     render() {
@@ -67,23 +83,18 @@ export default class GameHistory extends React.PureComponent {
 
       let historyButtonStyle = {
         "width": "23.7%",
-        "margin-top": "8px"
+        "marginTop": "8px"
       };
 
-      const historyItems = this.props.history.map((historyItem, index) => {
-        let formattedMovePgn = index % 2 ? "... " + this.props.history[index].movePgn : (index / 2 + 1) + '. ' + this.props.history[index].movePgn;
-
-        if (index == this.state.historyIndex) {
-          return (<option value={historyItem.movePgn} selected>{formattedMovePgn}</option>);
-        } else {
-          return (<option value={historyItem.movePgn}>{formattedMovePgn}</option>);
-        }
+      const historyItems = this.state.history.map((historyItem, index) => {
+        let formattedMovePgn = index % 2 ? "... " + this.state.history[index].movePgn : (index / 2 + 1) + '. ' + this.state.history[index].movePgn;
+        return (<option value={index}>{formattedMovePgn}</option>);
       });
 
       return (
         <div>
           <div style={historyContainer}>
-            <select multiple className='form-control' style={historySelect}>
+            <select size='2' className='form-control' style={historySelect} onChange={this.onChange} value={this.state.historyIndex}>
               {historyItems}
             </select>
 
