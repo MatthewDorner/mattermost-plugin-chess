@@ -13,7 +13,6 @@ export default class GameHistory extends React.PureComponent {
         setHistoryState: PropTypes.func.isRequired
     }
 
-    // not exactly right
     static getDerivedStateFromProps = (nextProps, prevState) => {
       if (!prevState.history || nextProps.history.length > prevState.history.length) {
         return {

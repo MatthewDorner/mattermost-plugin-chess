@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import getSiteURLFromWindowObject from '../../utils/GetSiteUrlFromWindowObject';
+import {id as pluginId} from '../../manifest';
 
 export default class GamePost extends React.PureComponent {
 
@@ -55,7 +56,7 @@ export default class GamePost extends React.PureComponent {
                     break;
             }
 
-            let pieceUrl = siteUrl + '/static/plugins/com.example.mattermost-chess/' + recentColor + recentPiece + '.png';
+            let pieceUrl = siteUrl + '/static/plugins/' + pluginId + '/' + recentColor + recentPiece + '.png';
     
             content = (
                 <span>

@@ -1,25 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Modal } from 'react-bootstrap';
-import ChessBoard from 'chessboardjs';
+import {Modal} from 'react-bootstrap';
+import chessBoard from 'chessboardjs';
 import Chess from 'chess.js';
-import './chessboard.css';
-import './fixes.css';
+
 import getSiteURLFromWindowObject from '../../utils/GetSiteUrlFromWindowObject';
 import GameHistory from '../GameHistory.jsx';
+import {id as pluginId} from '../../manifest';
+import './chessboard.css';
+import './fixes.css';
 
 export default class GameModal extends React.PureComponent {
 
     constructor(props) {
         super(props);
         this.state = {};
-        window.ChessBoard = ChessBoard;
+        window.ChessBoard = chessBoard;
     }
 
     static propTypes = {
         visibility: PropTypes.bool.isRequired,
         setGameModalVisibility: PropTypes.func.isRequired,
-        createPost: PropTypes.func.isRequired
+        createPost: PropTypes.func.isRequired,
+        currentUserId: PropTypes.string.isRequired,
+        currentChannelId: PropTypes.string.isRequired,
+        postsInCurrentChannel: PropTypes.object.isRequired,
     }
 
     /*
@@ -44,14 +49,15 @@ export default class GameModal extends React.PureComponent {
     }
 
     onDragStart = (source, piece, position, orientation) => {
-
         // do not pick up pieces if the game is over
-        if (this._game.game_over()) return false // will this count draws?
-      
+        if (this.game.game_over()) {
+            return false;
+        } // will this count draws?
+
         // only pick up pieces for the side to move
-        if ((this._game.turn() === 'w' && piece.search(/^b/) !== -1) ||
-            (this._game.turn() === 'b' && piece.search(/^w/) !== -1)) {
-            return false
+        if ((this.game.turn() === 'w' && piece.search(/^b/) !== -1) ||
+            (this.game.turn() === 'b' && piece.search(/^w/) !== -1)) {
+            return false;
         }
 
         // to implement:
@@ -59,73 +65,76 @@ export default class GameModal extends React.PureComponent {
         // only pick up if you're not browsing game history and are on
         // the current move instead.
     }
-      
+
     onDrop = async (source, target) => {
 
         // see if the move is legal
-        var move = this._game.move({
+        var move = this.game.move({
             from: source,
             to: target,
-            promotion: 'q' // NOTE: always promote to a queen for example simplicity
+            promotion: 'q', // NOTE: always promote to a queen for example simplicity
         });
 
         // illegal move
-        if (move === null) return 'snapback'
-      
+        if (move === null) {
+            return 'snapback';
+        }
+
         /*
-            this._game.turn() === 'b' means it's black's turn
-            this._game.in_checkmate()
-            this._game.in_draw()
-            this._game.in_check()
+            this.game.turn() === 'b' means it's black's turn
+            this.game.in_checkmate()
+            this.game.in_draw()
+            this.game.in_check()
         */
 
         let gameStatus = 'In Play';
-        if (this._game.in_checkmate()) {
+        if (this.game.in_checkmate()) {
             gameStatus = 'Checkmate';
-        } else if (this._game.in_draw()) {
+        } else if (this.game.in_draw()) {
             gameStatus = 'Draw';
         }
 
-       let newGameState = {
+        const newGameState = {
             playerWhite: this.state.gameState.playerWhite,
             playerBlack: this.state.gameState.playerBlack,
-            blackToMove: this._game.turn() === 'b' ? true : false,
-            pgn: this._game.pgn(),
-            gameStatus
-        }
+            blackToMove: this.game.turn() === 'b' ? true : false,
+            pgn: this.game.pgn(),
+            gameStatus,
+        };
 
         const time = Date.now();
         const userId = this.props.currentUserId;
 
-        let post = {
+        const post = {
             message: JSON.stringify(newGameState),
             channel_id: this.props.currentChannelId,
             pending_post_id: `${userId}:${time}`,
             user_id: userId,
             create_at: time,
-            parent_id: undefined,
+
+            // parent_id: undefined,
             metadata: {},
             props: {},
-            type: 'custom_chess-game-post'
+            type: 'custom_chess-game-post',
         };
 
         await this.props.createPost(post);
     }
-      
+
     // update the board position after the piece snap
     // for castling, en passant, pawn promotion
     onSnapEnd = () => {
-        this._board.position(this._game.fen())
-    }
-      
-    setHistoryState = (fen) => {
-        this._board.position(fen);
+        this.board.position(this.game.fen())
     }
 
-   static getDerivedStateFromProps(nextProps) {
+    setHistoryState = (fen) => {
+        this.board.position(fen);
+    }
+
+    static getDerivedStateFromProps(nextProps) {
         if (nextProps.postsInCurrentChannel) {
             for (var i = 0; i < nextProps.postsInCurrentChannel.length; i++) {
-                let post = nextProps.postsInCurrentChannel[i];
+                const post = nextProps.postsInCurrentChannel[i];
                 if (post.type == 'custom_chess-game-post') {
                     return { gameState: JSON.parse(post.message) };
                 }
@@ -138,59 +147,64 @@ export default class GameModal extends React.PureComponent {
         if (this.props.visibility) {
             window.requestAnimationFrame(() => {
 
-                let siteUrl = getSiteURLFromWindowObject(window);
-                let pieceTheme = siteUrl + '/static/plugins/com.example.mattermost-chess/{piece}.png';
-    
+                const siteUrl = getSiteURLFromWindowObject(window);
+                const pieceTheme = siteUrl + '/static/plugins/' + pluginId + '/{piece}.png';
+
                 var config = {
                     draggable: true,
                     pieceTheme,
                     onDragStart: this.onDragStart,
                     onDrop: this.onDrop,
                     onSnapEnd: this.onSnapEnd,
-                    position: this.state.gameState.gameStatus == 'New Game' ? 'start' : this._game.fen()
+                    position: this.state.gameState.gameStatus == 'New Game' ? 'start' : this.game.fen()
                 };
 
-                this._board = ChessBoard('chessboard', config);
+                this.board = chessBoard('chessboard', config);
                 if (this.props.currentUserId == this.state.gameState.playerBlack.id) {
-                    this._board.orientation('black');
+                    this.board.orientation('black');
                 }
             });
         }
     }
 
     render() {
-
-        let boardStyle = {
-            "width": "50%",
-            "float": "right"
+        const boardStyle = {
+            width: '50%',
+            float: 'right',
         };
 
-        this._game = new Chess();
+        this.game = new Chess();
 
         if (this.state.gameState) {
-            this._game.load_pgn(this.state.gameState.pgn);
+            this.game.load_pgn(this.state.gameState.pgn);
         }
 
         // PREPARE HISTORY FOR HISTORY BROWSER
-        let history = [];
-        var moves = this._game.history();
+        const history = [];
+        var moves = this.game.history();
         var newGame = new Chess();
         moves.forEach((move) => {
             newGame.move(move);
-            let movePgn = newGame.pgn().split(' ').slice(-1)[0];
-            let historyItem = {
-                movePgn: movePgn,
-                fen: newGame.fen()                
-            }
+            const movePgn = newGame.pgn().split(' ').slice(-1)[0];
+            const historyItem = {
+                movePgn,
+                fen: newGame.fen(),
+            };
             history.push(historyItem);
         });
 
         let titleString = '';
+
         // to fix: players aren't always same order as it appears in the channel title
+        /*
+            also would like not to have to check for this.state.gameState, yet the problem is
+            that this component is rendered even when it's not open, and there will be no
+            gameState. maybe I should make the entire render conditional on this.state.gameState
+        */
         if (this.state.gameState) {
             titleString = 'Chess: ' + this.state.gameState.playerWhite.name + ' VS ' + this.state.gameState.playerBlack.name;
         }
-            
+
         return (
             <Modal
                 className={'modal-confirm ' + this.props.modalClass}
@@ -209,7 +223,12 @@ export default class GameModal extends React.PureComponent {
                 </Modal.Header>
                 <Modal.Body>
                     <GameHistory setHistoryState={this.setHistoryState} history={history}/>
-                    <div id='chessboard' style={boardStyle}></div>
+                    <div
+                        id='boardcontainer'
+                        style={boardStyle}
+                    >
+                        <div id='chessboard'/>
+                    </div>
                 </Modal.Body>
                 <Modal.Footer>
                     <button
@@ -217,7 +236,7 @@ export default class GameModal extends React.PureComponent {
                         className='btn btn-link btn-cancel'
                         onClick={this.handleCancel}
                     >
-                        Cancel
+                        {'Cancel'}
                     </button>
                 </Modal.Footer>
             </Modal>
