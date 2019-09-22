@@ -11,7 +11,6 @@ import './chessboard.css';
 import './fixes.css';
 
 export default class GameModal extends React.PureComponent {
-
     constructor(props) {
         super(props);
         this.state = {};
@@ -48,7 +47,7 @@ export default class GameModal extends React.PureComponent {
         this.props.setGameModalVisibility(false);
     }
 
-    onDragStart = (source, piece, position, orientation) => {
+    onDragStart = (source, piece) => {
         // do not pick up pieces if the game is over
         if (this.game.game_over()) {
             return false;
@@ -64,10 +63,12 @@ export default class GameModal extends React.PureComponent {
         // only pick up piece if YOU are the side to move
         // only pick up if you're not browsing game history and are on
         // the current move instead.
+
+        // what do the return values in this function mean? return undefined
+        // if the drag is OK?
     }
 
     onDrop = async (source, target) => {
-
         // see if the move is legal
         var move = this.game.move({
             from: source,
@@ -97,7 +98,7 @@ export default class GameModal extends React.PureComponent {
         const newGameState = {
             playerWhite: this.state.gameState.playerWhite,
             playerBlack: this.state.gameState.playerBlack,
-            blackToMove: this.game.turn() === 'b' ? true : false,
+            blackToMove: this.game.turn() === 'b',
             pgn: this.game.pgn(),
             gameStatus,
         };
@@ -124,7 +125,7 @@ export default class GameModal extends React.PureComponent {
     // update the board position after the piece snap
     // for castling, en passant, pawn promotion
     onSnapEnd = () => {
-        this.board.position(this.game.fen())
+        this.board.position(this.game.fen());
     }
 
     setHistoryState = (fen) => {
@@ -135,8 +136,8 @@ export default class GameModal extends React.PureComponent {
         if (nextProps.postsInCurrentChannel) {
             for (var i = 0; i < nextProps.postsInCurrentChannel.length; i++) {
                 const post = nextProps.postsInCurrentChannel[i];
-                if (post.type == 'custom_chess-game-post') {
-                    return { gameState: JSON.parse(post.message) };
+                if (post.type === 'custom_chess-game-post') {
+                    return {gameState: JSON.parse(post.message)};
                 }
             }
         }
@@ -146,7 +147,6 @@ export default class GameModal extends React.PureComponent {
     componentDidUpdate() {
         if (this.props.visibility) {
             window.requestAnimationFrame(() => {
-
                 const siteUrl = getSiteURLFromWindowObject(window);
                 const pieceTheme = siteUrl + '/static/plugins/' + pluginId + '/{piece}.png';
 
@@ -156,11 +156,11 @@ export default class GameModal extends React.PureComponent {
                     onDragStart: this.onDragStart,
                     onDrop: this.onDrop,
                     onSnapEnd: this.onSnapEnd,
-                    position: this.state.gameState.gameStatus == 'New Game' ? 'start' : this.game.fen()
+                    position: this.state.gameState.gameStatus === 'New Game' ? 'start' : this.game.fen(),
                 };
 
                 this.board = chessBoard('chessboard', config);
-                if (this.props.currentUserId == this.state.gameState.playerBlack.id) {
+                if (this.props.currentUserId === this.state.gameState.playerBlack.id) {
                     this.board.orientation('black');
                 }
             });
@@ -168,16 +168,19 @@ export default class GameModal extends React.PureComponent {
     }
 
     render() {
+        // if the modal is closed and not on a channel that contains chess posts,
+        // there will be no gameState, so don't render
+        if (!this.state.gameState) {
+            return false;
+        }
+
         const boardStyle = {
             width: '50%',
             float: 'right',
         };
 
         this.game = new Chess();
-
-        if (this.state.gameState) {
-            this.game.load_pgn(this.state.gameState.pgn);
-        }
+        this.game.load_pgn(this.state.gameState.pgn);
 
         // PREPARE HISTORY FOR HISTORY BROWSER
         const history = [];
@@ -193,21 +196,12 @@ export default class GameModal extends React.PureComponent {
             history.push(historyItem);
         });
 
-        let titleString = '';
-
         // to fix: players aren't always same order as it appears in the channel title
-        /*
-            also would like not to have to check for this.state.gameState, yet the problem is
-            that this component is rendered even when it's not open, and there will be no
-            gameState. maybe I should make the entire render conditional on this.state.gameState
-        */
-        if (this.state.gameState) {
-            titleString = 'Chess: ' + this.state.gameState.playerWhite.name + ' VS ' + this.state.gameState.playerBlack.name;
-        }
+        const titleString = 'Chess: ' + this.state.gameState.playerWhite.name + ' VS ' + this.state.gameState.playerBlack.name;
 
         return (
             <Modal
-                className={'modal-confirm ' + this.props.modalClass}
+                className={'modal-confirm '}
                 show={this.props.visibility}
                 id='mattermost-chess_GameModal'
                 role='dialog'
@@ -222,7 +216,10 @@ export default class GameModal extends React.PureComponent {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <GameHistory setHistoryState={this.setHistoryState} history={history}/>
+                    <GameHistory
+                        setHistoryState={this.setHistoryState}
+                        history={history}
+                    />
                     <div
                         id='boardcontainer'
                         style={boardStyle}

@@ -5,7 +5,7 @@ export function setChallengeModalVisibility(visibility, userToChallenge) {
     return {
         type: ActionTypes.SET_CHALLENGEMODAL_VISIBILITY,
         data: visibility,
-        userToChallenge: userToChallenge
+        userToChallenge,
     };
 }
 
@@ -14,7 +14,7 @@ export function setGameModalVisibility(visibility, gameState) {
         type: ActionTypes.SET_GAMEMODAL_VISIBILITY,
         data: {
             visibility,
-            gameState
-        }
+            gameState,
+        },
     };
 }
