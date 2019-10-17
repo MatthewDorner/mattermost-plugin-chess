@@ -34,7 +34,7 @@ export default class GamePost extends React.PureComponent {
         if (gameState.gameStatus === 'New Game') {
             content = (
                 <span style={gameStatusStyle}>
-                    {'Chess: New Game. ' + gameState.playerWhite.name + 'Plays First'}
+                    {`Chess: New Game. ${gameState.playerWhite.name}Plays First`}
                 </span>
             );
         } else {
@@ -57,7 +57,7 @@ export default class GamePost extends React.PureComponent {
                 break;
             }
 
-            const pieceUrl = siteUrl + '/static/plugins/' + pluginId + '/' + recentColor + recentPiece + '.png';
+            const pieceUrl = `${siteUrl}/static/plugins/${pluginId}/${recentColor}${recentPiece}.png`;
 
             content = (
                 <span>
@@ -71,7 +71,7 @@ export default class GamePost extends React.PureComponent {
 
             if (gameState.gameStatus === 'Checkmate') {
                 const previousPlayer = gameState.blackToMove ? gameState.playerWhite.name : gameState.playerBlack.name;
-                status = 'Checkmate. ' + previousPlayer + ' Won!';
+                status = `Checkmate. ${previousPlayer} Won!`;
             } else if (gameState.gameStatus === 'Draw') {
                 status = 'Draw. Game Over.';
             }

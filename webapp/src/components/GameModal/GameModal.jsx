@@ -148,7 +148,7 @@ export default class GameModal extends React.PureComponent {
         if (this.props.visibility) {
             window.requestAnimationFrame(() => {
                 const siteUrl = getSiteURLFromWindowObject(window);
-                const pieceTheme = siteUrl + '/static/plugins/' + pluginId + '/{piece}.png';
+                const pieceTheme = `${siteUrl}/static/plugins/${pluginId}/{piece}.png`;
 
                 var config = {
                     draggable: true,
@@ -197,7 +197,7 @@ export default class GameModal extends React.PureComponent {
         });
 
         // to fix: players aren't always same order as it appears in the channel title
-        const titleString = 'Chess: ' + this.state.gameState.playerWhite.name + ' VS ' + this.state.gameState.playerBlack.name;
+        const titleString = `Chess: ${this.state.gameState.playerWhite.name} VS ${this.state.gameState.playerBlack.name}`;
 
         return (
             <Modal

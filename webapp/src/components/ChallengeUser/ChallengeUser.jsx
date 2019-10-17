@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {id as pluginId} from '../../manifest';
 
 export default class ChallengeUser extends React.PureComponent {
-
     static propTypes = {
-        user: PropTypes.object.isRequired
+        user: PropTypes.object.isRequired,
+        hide: PropTypes.func.isRequired,
+        setChallengeModalVisibility: PropTypes.func.isRequired,
     }
 
     challengeUserToChess = () => {
@@ -16,9 +16,9 @@ export default class ChallengeUser extends React.PureComponent {
     render() {
         return (
             <div
-            data-toggle='tooltip'
-            className='popover__row first'
-            key='user-popover-add-to-channel'
+                data-toggle='tooltip'
+                className='popover__row first'
+                key='user-popover-add-to-channel'
             >
                 <a
                     href='#'
@@ -29,7 +29,7 @@ export default class ChallengeUser extends React.PureComponent {
                         className='fa fa-gamepad'
                         title='Challenge User to Chess'
                     />
-                    Challenge User to Chess
+                    {'Challenge User to Chess'}
                 </a>
             </div>
         );

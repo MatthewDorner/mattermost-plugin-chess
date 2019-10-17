@@ -44,7 +44,7 @@ export default class GameHistory extends React.PureComponent {
         }
 
         if (currentIndex < 0) {
-            currentIndex = 0
+            currentIndex = 0;
         }
         if (currentIndex > this.state.history.length - 1) {
             currentIndex = this.state.history.length - 1;
@@ -59,7 +59,7 @@ export default class GameHistory extends React.PureComponent {
 
     onChange = (event) => {
         this.setState({
-            historyIndex: parseInt(event.target.value, 10)
+            historyIndex: parseInt(event.target.value, 10),
         }, () => {
             this.props.setHistoryState(this.state.history[this.state.historyIndex].fen);
         });
@@ -85,7 +85,7 @@ export default class GameHistory extends React.PureComponent {
         };
 
         const historyItems = this.state.history.map((historyItem, index) => {
-            const formattedMovePgn = index % 2 ? '... ' + this.state.history[index].movePgn : (index / 2 + 1) + '. ' + this.state.history[index].movePgn;
+            const formattedMovePgn = index % 2 ? `... ${this.state.history[index].movePgn}` : `${(index / 2) + 1}. ${this.state.history[index].movePgn}`;
             return (
                 <option
                     value={index}
@@ -125,7 +125,7 @@ export default class GameHistory extends React.PureComponent {
                             onClick={() => this.handleTransport('previous')}
                         >
                             {'<'}
-                        </button>          
+                        </button>
                         <button
                             style={historyButtonStyle}
                             type='button'

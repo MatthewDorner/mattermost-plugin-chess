@@ -1,20 +1,19 @@
 import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {id as pluginId} from '../../manifest';
-import {setGameModalVisibility} from '../../actions';
-import {createPost, getPosts} from 'mattermost-redux/actions/posts';
-import {createChannel, selectChannel, addChannelMember} from 'mattermost-redux/actions/channels';
+import {createPost} from 'mattermost-redux/actions/posts';
 import {getMe} from 'mattermost-redux/actions/users';
 import {getPostsInCurrentChannel} from 'mattermost-redux/selectors/entities/posts';
+import {bindActionCreators} from 'redux';
 
-// import {patchUser} from 'mattermost-redux/actions'; // importing the action
+import {setGameModalVisibility} from '../../actions';
+
+import {id as pluginId} from '../../manifest';
 
 import GameModal from './GameModal.jsx';
 
 const mapStateToProps = (state) => {
     return {
-        visibility: state['plugins-' + pluginId].gameModalVisibility.visibility,
-        gameState: state['plugins-' + pluginId].gameModalVisibility.gameState,
+        visibility: state[`plugins-${pluginId}`].gameModalVisibility.visibility,
+        gameState: state[`plugins-${pluginId}`].gameModalVisibility.gameState,
         currentChannelId: state.entities.channels.currentChannelId,
         currentUserId: state.entities.users.currentUserId,
         postsInCurrentChannel: getPostsInCurrentChannel(state),
@@ -22,12 +21,9 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-	setGameModalVisibility,
+    setGameModalVisibility,
     createPost,
-    // createChannel,
-    // selectChannel,
-    // addChannelMember,
-    getMe
+    getMe,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameModal);
