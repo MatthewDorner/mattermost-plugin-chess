@@ -10,6 +10,19 @@ import {id as pluginId} from '../../manifest';
 import './chessboard.css';
 import './fixes.css';
 
+import './chesspieces/wikipedia/bB.png';
+import './chesspieces/wikipedia/bK.png';
+import './chesspieces/wikipedia/bN.png';
+import './chesspieces/wikipedia/bP.png';
+import './chesspieces/wikipedia/bQ.png';
+import './chesspieces/wikipedia/bR.png';
+import './chesspieces/wikipedia/wB.png';
+import './chesspieces/wikipedia/wK.png';
+import './chesspieces/wikipedia/wN.png';
+import './chesspieces/wikipedia/wP.png';
+import './chesspieces/wikipedia/wQ.png';
+import './chesspieces/wikipedia/wR.png';
+
 export default class GameModal extends React.PureComponent {
     constructor(props) {
         super(props);

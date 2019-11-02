@@ -34,7 +34,7 @@ export default class GamePost extends React.PureComponent {
         if (gameState.gameStatus === 'New Game') {
             content = (
                 <span style={gameStatusStyle}>
-                    {`Chess: New Game. ${gameState.playerWhite.name}Plays First`}
+                    {`Chess: New Game. ${gameState.playerWhite.name} Plays First`}
                 </span>
             );
         } else {
@@ -58,7 +58,6 @@ export default class GamePost extends React.PureComponent {
             }
 
             const pieceUrl = `${siteUrl}/static/plugins/${pluginId}/${recentColor}${recentPiece}.png`;
-
             content = (
                 <span>
                     <img
