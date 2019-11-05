@@ -7,21 +7,21 @@ import Chess from 'chess.js';
 import getSiteURLFromWindowObject from '../../utils/GetSiteUrlFromWindowObject';
 import GameHistory from '../GameHistory.jsx';
 import {id as pluginId} from '../../manifest';
-import './chessboard.css';
-import './fixes.css';
 
-import './chesspieces/wikipedia/bB.png';
-import './chesspieces/wikipedia/bK.png';
-import './chesspieces/wikipedia/bN.png';
-import './chesspieces/wikipedia/bP.png';
-import './chesspieces/wikipedia/bQ.png';
-import './chesspieces/wikipedia/bR.png';
-import './chesspieces/wikipedia/wB.png';
-import './chesspieces/wikipedia/wK.png';
-import './chesspieces/wikipedia/wN.png';
-import './chesspieces/wikipedia/wP.png';
-import './chesspieces/wikipedia/wQ.png';
-import './chesspieces/wikipedia/wR.png';
+import '../../../node_modules/chessboardjs/www/css/chessboard.css';
+import './fix.css';
+import '../../../node_modules/chessboardjs/www/img/chesspieces/wikipedia/bB.png';
+import '../../../node_modules/chessboardjs/www/img/chesspieces/wikipedia/bK.png';
+import '../../../node_modules/chessboardjs/www/img/chesspieces/wikipedia/bN.png';
+import '../../../node_modules/chessboardjs/www/img/chesspieces/wikipedia/bP.png';
+import '../../../node_modules/chessboardjs/www/img/chesspieces/wikipedia/bQ.png';
+import '../../../node_modules/chessboardjs/www/img/chesspieces/wikipedia/bR.png';
+import '../../../node_modules/chessboardjs/www/img/chesspieces/wikipedia/wB.png';
+import '../../../node_modules/chessboardjs/www/img/chesspieces/wikipedia/wK.png';
+import '../../../node_modules/chessboardjs/www/img/chesspieces/wikipedia/wN.png';
+import '../../../node_modules/chessboardjs/www/img/chesspieces/wikipedia/wP.png';
+import '../../../node_modules/chessboardjs/www/img/chesspieces/wikipedia/wQ.png';
+import '../../../node_modules/chessboardjs/www/img/chesspieces/wikipedia/wR.png';
 
 export default class GameModal extends React.PureComponent {
   constructor(props) {
@@ -36,25 +36,8 @@ export default class GameModal extends React.PureComponent {
     createPost: PropTypes.func.isRequired,
     currentUserId: PropTypes.string.isRequired,
     currentChannelId: PropTypes.string.isRequired,
-    postsInCurrentChannel: PropTypes.object.isRequired, // is undefined but is required
+    postsInCurrentChannel: PropTypes.array.isRequired, // is undefined but is required
   }
-
-  /*
-      FEN string describes a board position. chess.js and chessboard.js both take a FEN string to initialize.
-      since I want history to be retained, I need to maintain the entire list of moves in the gameState object,
-      but need to be able to convert the list of moves to and from FEN
-
-      the notation to save the list of moves will be PGN, so... should be easy
-
-      chess.load_pgn
-      chess.fen()
-
-      https://stackoverflow.com/questions/32685324/converting-a-pgn-to-a-list-of-fen-strings-in-nodejs-chess-notations
-
-      ONLY ALLOW LEGAL MOVES, ADAPT THIS CODE
-      https://chessboardjs.com/examples#5000
-
-  */
 
   handleCancel = () => {
     this.props.setGameModalVisibility(false);
@@ -64,7 +47,7 @@ export default class GameModal extends React.PureComponent {
     // do not pick up pieces if the game is over
     if (this.game.game_over()) {
       return false;
-    } // will this count draws?
+    }
 
     // only pick up pieces for the side to move
     if ((this.game.turn() === 'w' && piece.search(/^b/) !== -1) ||
@@ -72,13 +55,16 @@ export default class GameModal extends React.PureComponent {
       return false;
     }
 
-    // to implement:
-    // only pick up piece if YOU are the side to move
-    // only pick up if you're not browsing game history and are on
-    // the current move instead.
+    // only pick up if it's your turn to move
+    // if ((this.props.currentUserId === this.state.gameState.playerBlack.id && this.game.turn() === 'w') ||
+    //   (this.props.currentUserId === this.state.gameState.playerWhite.id && this.game.turn() === 'b')) {
+    //   return false;
+    // }
 
-    // what do the return values in this function mean? return undefined
-    // if the drag is OK?
+    // opnly pick up if you're not browsing game history
+    if (this.game.fen().indexOf(this.board.fen()) === -1) {
+      return false;
+    }
 
     return true;
   }
@@ -96,13 +82,6 @@ export default class GameModal extends React.PureComponent {
       return 'snapback';
     }
 
-    /*
-          this.game.turn() === 'b' means it's black's turn
-          this.game.in_checkmate()
-          this.game.in_draw()
-          this.game.in_check()
-      */
-
     let gameStatus = 'In Play';
     if (this.game.in_checkmate()) {
       gameStatus = 'Checkmate';
@@ -119,13 +98,11 @@ export default class GameModal extends React.PureComponent {
     };
 
     const time = Date.now();
-    const userId = this.props.currentUserId;
-
     const post = {
       message: JSON.stringify(newGameState),
       channel_id: this.props.currentChannelId,
-      pending_post_id: `${userId}:${time}`,
-      user_id: userId,
+      pending_post_id: `${this.props.currentUserId}:${time}`,
+      user_id: this.props.currentUserId,
       create_at: time,
 
       // parent_id: undefined,
@@ -136,7 +113,6 @@ export default class GameModal extends React.PureComponent {
 
     await this.props.createPost(post);
 
-    // ?????
     return true;
   }
 

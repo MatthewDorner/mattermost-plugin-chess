@@ -1,6 +1,6 @@
 {
     "id": "com.matthewdorner.mattermost-plugin-chess",
-    "name": "Mattermost Chess Plugin",
+    "name": "Chess",
     "description": "This plugin allows users to play chess with each other.",
     "version": "0.1.0",
     "min_server_version": "5.12.0",

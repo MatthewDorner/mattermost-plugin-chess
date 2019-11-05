@@ -11,7 +11,7 @@ export default class GamePost extends React.PureComponent {
     }
 
     handleReply = () => {
-      this.props.setGameModalVisibility(true, JSON.parse(this.props.post.message));
+      this.props.setGameModalVisibility(true);
     }
 
     render() {
@@ -26,7 +26,7 @@ export default class GamePost extends React.PureComponent {
       };
 
       const gameStatusStyle = {
-        'font-weight': 'bold',
+        fontWeight: 'bold',
       };
 
       let content;
@@ -79,18 +79,19 @@ export default class GamePost extends React.PureComponent {
       return (
         <div>
           <div>
-            <span style={{'margin-right': '5px'}}>
+            {/* was margin-right */}
+            <span style={{marginRight: '5px'}}>
               {content}
             </span>
             <a
-              style={{'font-size': '10px'}}
+              style={{fontSize: '10px'}}
               onClick={this.handleReply}
             >
               {'Open Game'}
             </a>
           </div>
           <div>
-            <span style={{'font-weight': 'bold'}}>
+            <span style={{fontWeight: 'bold'}}>
               {status}
             </span>
           </div>

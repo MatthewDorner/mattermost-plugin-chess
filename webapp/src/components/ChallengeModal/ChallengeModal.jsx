@@ -6,6 +6,7 @@ import {General} from 'mattermost-redux/constants';
 const uuidv4 = require('uuid/v4');
 
 export default class ChallengeModal extends React.PureComponent {
+
   static propTypes = {
     visibility: PropTypes.bool.isRequired, // is undefined
     setChallengeModalVisibility: PropTypes.func.isRequired,
@@ -19,17 +20,33 @@ export default class ChallengeModal extends React.PureComponent {
   }
 
   handleConfirm = async () => {
+    // GET THE PLAYER INFO
+    const me = await this.props.getMe();
+    const mePlayer = {
+      id: me.data.id,
+      name: me.data.first_name,
+    };
+    const challengePlayer = {
+      id: this.props.userToChallenge.id,
+      name: this.props.userToChallenge.first_name,
+    };
+    const mePlaysWhite = (Math.random() < 0.5);
+    const newGameState = {
+      playerWhite: mePlaysWhite ? mePlayer : challengePlayer,
+      playerBlack: mePlaysWhite ? challengePlayer : mePlayer,
+      gameStatus: 'New Game',
+      blackToMove: false,
+      pgn: '',
+    };
+
     // CREATE THE NEW CHANNEL // see new_channel_flow.jsx
     const newChannelUuid = uuidv4();
     const strippedUuid = newChannelUuid.replace(/-/g, '');
     const newChannelName = `mattermostchess${strippedUuid}`;
-
-    const me = await this.props.getMe();
-    const currentUserName = me.data.first_name;
     const channel = {
       team_id: this.props.currentTeamId, // should be ok
-      name: newChannelName, // whats diff between name & display_name
-      display_name: `Chess: ${currentUserName} VS ${this.props.userToChallenge.first_name}`,
+      name: newChannelName,
+      display_name: `Chess: ${newGameState.playerWhite.name} VS ${newGameState.playerBlack.name}`,
       purpose: 'to play chess',
       header: '',
       type: General.PRIVATE_CHANNEL,
@@ -40,26 +57,7 @@ export default class ChallengeModal extends React.PureComponent {
     // ADD THE CHALLENGED USER TO NEW CHANNEL
     await this.props.addChannelMember(newChannelId, this.props.userToChallenge.id);
 
-    const mePlayer = {
-      id: me.data.id,
-      name: me.data.first_name,
-    };
-
-    const challengePlayer = {
-      id: this.props.userToChallenge.id,
-      name: this.props.userToChallenge.first_name,
-    };
-
-    // CREATE THE INITIAL GamePost
-    const mePlaysWhite = (Math.random() < 0.5);
-    const newGameState = {
-      playerWhite: mePlaysWhite ? mePlayer : challengePlayer,
-      playerBlack: mePlaysWhite ? challengePlayer : mePlayer,
-      gameStatus: 'New Game',
-      blackToMove: false,
-      pgn: '',
-    };
-
+    // CREATE THE INITIAL GAME POST FOR THE GAME CHANNEL
     const gamePostMessage = JSON.stringify(newGameState);
     const post = {
       message: gamePostMessage,
@@ -87,16 +85,6 @@ export default class ChallengeModal extends React.PureComponent {
   }
 
   render() {
-    const cancelButton = (
-      <button
-        type='button'
-        className='btn btn-link btn-cancel'
-        onClick={this.handleCancel}
-      >
-        {'Cancel'}
-      </button>
-    );
-
     const first = this.props.userToChallenge ? this.props.userToChallenge.first_name : '';
     const last = this.props.userToChallenge ? this.props.userToChallenge.last_name : '';
 
@@ -122,7 +110,13 @@ export default class ChallengeModal extends React.PureComponent {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          {cancelButton}
+          <button
+            type='button'
+            className='btn btn-link btn-cancel'
+            onClick={this.handleCancel}
+          >
+            {'Cancel'}
+          </button>
           <button
             autoFocus={true}
             type='button'

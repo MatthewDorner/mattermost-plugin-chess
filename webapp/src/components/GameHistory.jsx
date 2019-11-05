@@ -22,11 +22,11 @@ export default class GameHistory extends React.PureComponent {
     return null;
   }
 
-  // transport buttons cause crash when there's no moves in the game yet
   handleTransport = (direction) => {
     if (this.state.history.length === 0) {
       return;
     }
+
     let currentIndex = this.state.historyIndex;
 
     switch (direction) {
@@ -80,8 +80,6 @@ export default class GameHistory extends React.PureComponent {
       height: '285px',
     };
 
-    const historyControlsStyle = {};
-
     const historyButtonStyle = {
       width: '23.7%',
       marginTop: '8px',
@@ -112,7 +110,7 @@ export default class GameHistory extends React.PureComponent {
             {historyItems}
           </select>
 
-          <div style={historyControlsStyle}>
+          <div>
             <button
               style={historyButtonStyle}
               type='button'

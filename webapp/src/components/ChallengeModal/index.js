@@ -9,16 +9,12 @@ import {getMe} from 'mattermost-redux/actions/users';
 import {setChallengeModalVisibility} from '../../actions';
 import {id as pluginId} from '../../manifest';
 
-// import {patchUser} from 'mattermost-redux/actions'; // importing the action
-
 import ChallengeModal from './ChallengeModal.jsx';
 
 const mapStateToProps = (state) => {
   return {
     visibility: state[`plugins-${pluginId}`].challengeModalVisibility.visibility,
     userToChallenge: state[`plugins-${pluginId}`].challengeModalVisibility.userToChallenge,
-
-    // currentChannelId: state.entities.channels.currentChannelId,
     currentUserId: state.entities.users.currentUserId,
     currentTeamId: getCurrentTeamId(state),
   };

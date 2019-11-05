@@ -1,4 +1,6 @@
-// copied from utils in mattermost-webapp
+// copied from: https://github.com/mattermost/mattermost-webapp/blob/master/utils/url.tsx
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// https://github.com/mattermost/mattermost-webapp/blob/master/LICENSE.txt
 
 export default function(obj) {
   let siteURL = '';
