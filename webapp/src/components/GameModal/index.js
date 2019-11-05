@@ -11,19 +11,19 @@ import {id as pluginId} from '../../manifest';
 import GameModal from './GameModal.jsx';
 
 const mapStateToProps = (state) => {
-    return {
-        visibility: state[`plugins-${pluginId}`].gameModalVisibility.visibility,
-        gameState: state[`plugins-${pluginId}`].gameModalVisibility.gameState,
-        currentChannelId: state.entities.channels.currentChannelId,
-        currentUserId: state.entities.users.currentUserId,
-        postsInCurrentChannel: getPostsInCurrentChannel(state),
-    };
+  return {
+    visibility: state[`plugins-${pluginId}`].gameModalVisibility.visibility,
+    gameState: state[`plugins-${pluginId}`].gameModalVisibility.gameState,
+    currentChannelId: state.entities.channels.currentChannelId,
+    currentUserId: state.entities.users.currentUserId,
+    postsInCurrentChannel: getPostsInCurrentChannel(state),
+  };
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-    setGameModalVisibility,
-    createPost,
-    getMe,
+  setGameModalVisibility,
+  createPost,
+  getMe,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameModal);

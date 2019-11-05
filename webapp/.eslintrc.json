@@ -152,10 +152,7 @@
     ],
     "indent": [
       2,
-      4,
-      {
-        "SwitchCase": 0
-      }
+      2
     ],
     "jsx-quotes": [
       2,
@@ -484,11 +481,11 @@
     "react/jsx-handler-names": 0,
     "react/jsx-indent": [
       2,
-      4
+      2
     ],
     "react/jsx-indent-props": [
       2,
-      4
+      2
     ],
     "react/jsx-key": 2,
     "react/jsx-max-props-per-line": [

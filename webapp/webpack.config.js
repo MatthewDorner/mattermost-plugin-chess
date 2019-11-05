@@ -1,76 +1,76 @@
 var path = require('path');
 
 module.exports = {
-    entry: [
-        './src/index.jsx',
+  entry: [
+    './src/index.jsx',
+  ],
+  resolve: {
+    modules: [
+      'src',
+      'node_modules',
     ],
-    resolve: {
-        modules: [
-            'src',
-            'node_modules',
-        ],
-        extensions: ['*', '.js', '.jsx'],
-    },
-    module: {
-        rules: [
-            {
-                test: /\.(js|jsx)$/,
-                exclude: /node_modules/,
-                use: {
-                    loader: 'babel-loader',
-                    options: {
-                        plugins: [
-                            '@babel/plugin-proposal-class-properties',
-                            '@babel/plugin-syntax-dynamic-import',
-                        ],
-                        presets: [
-                            ['@babel/preset-env', {
-                                targets: {
-                                    chrome: 66,
-                                    firefox: 60,
-                                    edge: 42,
-                                    safari: 12,
-                                },
-                                modules: false,
-                                debug: false,
-                                useBuiltIns: 'usage',
-                                shippedProposals: true,
-                            }],
-                            ['@babel/preset-react', {
-                                useBuiltIns: true,
-                            }],
-                        ],
-                    },
+    extensions: ['*', '.js', '.jsx'],
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            plugins: [
+              '@babel/plugin-proposal-class-properties',
+              '@babel/plugin-syntax-dynamic-import',
+            ],
+            presets: [
+              ['@babel/preset-env', {
+                targets: {
+                  chrome: 66,
+                  firefox: 60,
+                  edge: 42,
+                  safari: 12,
                 },
-            },
-            {
-                test: /\.css$/,
-                use: [
-                    'style-loader',
-                    'css-loader',
-                ],
-            },
-            {
-                test: /\.(png|svg|jpg|gif)$/,
-                use: {
-                    loader: 'file-loader',
-                    options: {
-                        name: '[name].[ext]',
-                    },
-                },
-            },
+                modules: false,
+                debug: false,
+                useBuiltIns: 'usage',
+                shippedProposals: true,
+              }],
+              ['@babel/preset-react', {
+                useBuiltIns: true,
+              }],
+            ],
+          },
+        },
+      },
+      {
+        test: /\.css$/,
+        use: [
+          'style-loader',
+          'css-loader',
         ],
-    },
-    externals: {
-        react: 'React',
-        redux: 'Redux',
-        'react-redux': 'ReactRedux',
-        'prop-types': 'PropTypes',
-        'react-bootstrap': 'ReactBootstrap',
-    },
-    output: {
-        path: path.join(__dirname, '/dist'),
-        publicPath: '/',
-        filename: 'main.js',
-    },
+      },
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+          },
+        },
+      },
+    ],
+  },
+  externals: {
+    react: 'React',
+    redux: 'Redux',
+    'react-redux': 'ReactRedux',
+    'prop-types': 'PropTypes',
+    'react-bootstrap': 'ReactBootstrap',
+  },
+  output: {
+    path: path.join(__dirname, '/dist'),
+    publicPath: '/',
+    filename: 'main.js',
+  },
 };

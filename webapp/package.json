@@ -41,6 +41,7 @@
     "chessboardjs": "0.0.1",
     "cm-chessboard": "^2.15.1",
     "mattermost-redux": "^5.13.0",
+    "react-bootstrap": "github:mattermost/react-bootstrap#c6957962364e0818a51bbfd13e89919903b422d6",    
     "react": "16.8.6",
     "react-redux": "5.0.7",
     "redux": "4.0.1"

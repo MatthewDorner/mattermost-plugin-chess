@@ -14,23 +14,23 @@ import {id as pluginId} from '../../manifest';
 import ChallengeModal from './ChallengeModal.jsx';
 
 const mapStateToProps = (state) => {
-    return {
-        visibility: state[`plugins-${pluginId}`].challengeModalVisibility.visibility,
-        userToChallenge: state[`plugins-${pluginId}`].challengeModalVisibility.userToChallenge,
+  return {
+    visibility: state[`plugins-${pluginId}`].challengeModalVisibility.visibility,
+    userToChallenge: state[`plugins-${pluginId}`].challengeModalVisibility.userToChallenge,
 
-        // currentChannelId: state.entities.channels.currentChannelId,
-        currentUserId: state.entities.users.currentUserId,
-        currentTeamId: getCurrentTeamId(state),
-    };
+    // currentChannelId: state.entities.channels.currentChannelId,
+    currentUserId: state.entities.users.currentUserId,
+    currentTeamId: getCurrentTeamId(state),
+  };
 };
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-    setChallengeModalVisibility,
-    createPost,
-    createChannel,
-    selectChannel,
-    addChannelMember,
-    getMe,
+  setChallengeModalVisibility,
+  createPost,
+  createChannel,
+  selectChannel,
+  addChannelMember,
+  getMe,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChallengeModal);

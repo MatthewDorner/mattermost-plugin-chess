@@ -5,13 +5,8 @@ import {setGameModalVisibility} from '../../actions';
 
 import GamePost from './GamePost.jsx';
 
-const mapStateToProps = (state) => {
-    return {
-    };
-};
-
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-    setGameModalVisibility,
+  setGameModalVisibility,
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(GamePost);
+export default connect(null, mapDispatchToProps)(GamePost);

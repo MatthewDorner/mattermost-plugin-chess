@@ -11,17 +11,17 @@ import {setChallengeModalVisibility, setGameModalVisibility} from './actions';
 // https://developers.mattermost.com/extend/plugins/webapp/reference/#registerRootComponent
 
 export default class MattermostChessPlugin {
-    initialize(registry, store) {
-        registry.registerReducer(Reducer);
+  initialize(registry, store) {
+    registry.registerReducer(Reducer);
 
-        registry.registerPopoverUserActionsComponent(ChallengeUser);
-        registry.registerRootComponent(ChallengeModal);
-        registry.registerRootComponent(GameModal);
-        registry.registerPostTypeComponent('custom_chess-game-post', GamePost);
+    registry.registerPopoverUserActionsComponent(ChallengeUser);
+    registry.registerRootComponent(ChallengeModal);
+    registry.registerRootComponent(GameModal);
+    registry.registerPostTypeComponent('custom_chess-game-post', GamePost);
 
-        setChallengeModalVisibility(false);
-        setGameModalVisibility(false);
-    }
+    setChallengeModalVisibility(false);
+    setGameModalVisibility(false);
+  }
 }
 
 window.registerPlugin(pluginId, new MattermostChessPlugin());
