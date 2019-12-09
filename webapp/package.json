@@ -1,6 +1,6 @@
 {
   "name": "webapp",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "This plugin allows Mattermost users to play chess with each other.",
   "main": "src/index.jsx",
   "scripts": {
