@@ -59,10 +59,10 @@ export default class GameModal extends React.PureComponent {
 
     // COMMENT OUT THIS PART FOR EASIER TESTING WITH ONLY ONE USER LOGGED IN
     // only pick up if it's your turn to move
-    // if ((this.props.currentUserId === this.state.gameState.playerBlack.id && this.game.turn() === 'w') ||
-    //   (this.props.currentUserId === this.state.gameState.playerWhite.id && this.game.turn() === 'b')) {
-    //   return false;
-    // }
+    if ((this.props.currentUserId === this.state.gameState.playerBlack.id && this.game.turn() === 'w') ||
+      (this.props.currentUserId === this.state.gameState.playerWhite.id && this.game.turn() === 'b')) {
+      return false;
+    }
 
     // only pick up if you're not browsing game history
     if (this.game.fen().indexOf(this.board.fen()) === -1) {
