@@ -2,7 +2,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 import {createPost} from 'mattermost-redux/actions/posts';
-import {createChannel, selectChannel, addChannelMember} from 'mattermost-redux/actions/channels';
+import {createChannel, addChannelMember} from 'mattermost-redux/actions/channels';
 import {getCurrentTeamId} from 'mattermost-redux/selectors/entities/teams';
 import {getMe} from 'mattermost-redux/actions/users';
 
@@ -24,7 +24,6 @@ const mapDispatchToProps = (dispatch) => bindActionCreators({
   setChallengeModalVisibility,
   createPost,
   createChannel,
-  selectChannel,
   addChannelMember,
   getMe,
 }, dispatch);

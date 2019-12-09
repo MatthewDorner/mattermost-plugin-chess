@@ -3,19 +3,20 @@ import PropTypes from 'prop-types';
 import {Modal} from 'react-bootstrap';
 import {General} from 'mattermost-redux/constants';
 
+import GameStatuses from '../../utils/GameStatuses';
+
 const uuidv4 = require('uuid/v4');
 
 export default class ChallengeModal extends React.PureComponent {
-
   static propTypes = {
     visibility: PropTypes.bool.isRequired, // is undefined
+    userToChallenge: PropTypes.object.isRequired, // is undefined
     setChallengeModalVisibility: PropTypes.func.isRequired,
     createPost: PropTypes.func.isRequired,
     getMe: PropTypes.func.isRequired,
     currentTeamId: PropTypes.string.isRequired,
     currentUserId: PropTypes.string.isRequired,
     createChannel: PropTypes.func.isRequired,
-    userToChallenge: PropTypes.object.isRequired, // is undefined
     addChannelMember: PropTypes.func.isRequired,
   }
 
@@ -30,21 +31,19 @@ export default class ChallengeModal extends React.PureComponent {
       id: this.props.userToChallenge.id,
       name: this.props.userToChallenge.first_name,
     };
-    const mePlaysWhite = (Math.random() < 0.5);
+    const mePlaysWhite = (Math.random() < (1 / 2));
     const newGameState = {
       playerWhite: mePlaysWhite ? mePlayer : challengePlayer,
       playerBlack: mePlaysWhite ? challengePlayer : mePlayer,
-      gameStatus: 'New Game',
+      gameStatus: GameStatuses.NEW_GAME,
       blackToMove: false,
       pgn: '',
     };
 
     // CREATE THE NEW CHANNEL // see new_channel_flow.jsx
-    const newChannelUuid = uuidv4();
-    const strippedUuid = newChannelUuid.replace(/-/g, '');
-    const newChannelName = `mattermostchess${strippedUuid}`;
+    const newChannelName = `chess-${uuidv4()}`;
     const channel = {
-      team_id: this.props.currentTeamId, // should be ok
+      team_id: this.props.currentTeamId,
       name: newChannelName,
       display_name: `Chess: ${newGameState.playerWhite.name} VS ${newGameState.playerBlack.name}`,
       purpose: 'to play chess',
@@ -76,8 +75,14 @@ export default class ChallengeModal extends React.PureComponent {
     post.type = 'custom_chess-game-post';
     await this.props.createPost(post);
 
-    // await this.props.selectChannel(newChannelId); no, because for whatever reason it fails...
     this.props.setChallengeModalVisibility(false);
+
+    // used mattermost-redux/actions/actions/channels selectChannel here but it doesn't work.
+    // the channel switches but just says "loading..." and never updates
+    // there is some code in mattermost-webapp new_channel_flow, which uses
+    // switchToChannel when creating a new channel, which itself uses selectChannel in some way
+    // but switchToChannel is from global_actions in mattermost-webapp so I can't use it?
+    // this.props.selectChannel(newChannelId);
   }
 
   handleCancel = () => {

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import getSiteURLFromWindowObject from '../../utils/GetSiteUrlFromWindowObject';
 import {id as pluginId} from '../../manifest';
+import GameStatuses from '../../utils/GameStatuses';
 
 export default class GamePost extends React.PureComponent {
     static propTypes = {
@@ -17,23 +18,14 @@ export default class GamePost extends React.PureComponent {
     render() {
       const gameState = JSON.parse(this.props.post.message);
       const siteUrl = getSiteURLFromWindowObject(window);
-
-      const pieceIconStyle = {
-        display: 'inline',
-        width: '20px',
-        marginRight: '2px',
-        paddingBottom: '2px',
-      };
-
-      const gameStatusStyle = {
-        fontWeight: 'bold',
-      };
-
       let content;
       let status = '';
-      if (gameState.gameStatus === 'New Game') {
+
+      // this will be shown when the game is first created
+      // (and no move will be included since nobody has moved yet)
+      if (gameState.gameStatus === GameStatuses.NEW_GAME) {
         content = (
-          <span style={gameStatusStyle}>
+          <span style={styles.status}>
             {`Chess: New Game. ${gameState.playerWhite.name} Plays First`}
           </span>
         );
@@ -41,7 +33,6 @@ export default class GamePost extends React.PureComponent {
         const recentColor = gameState.blackToMove ? 'w' : 'b';
         let recentPiece = gameState.pgn.split(' ').slice(-1)[0].charAt(0);
 
-        // also need to handle castle
         switch (recentPiece) {
         case 'a':
         case 'b':
@@ -53,6 +44,9 @@ export default class GamePost extends React.PureComponent {
         case 'h':
           recentPiece = 'P';
           break;
+        case 'O':
+          recentPiece = 'R';
+          break;
         default:
           break;
         }
@@ -62,16 +56,17 @@ export default class GamePost extends React.PureComponent {
           <span>
             <img
               src={pieceUrl}
-              style={pieceIconStyle}
+              style={styles.pieceIcon}
             />
             {gameState.pgn.split(' ').slice(-1)[0]}
           </span>
         );
 
-        if (gameState.gameStatus === 'Checkmate') {
+        // these statuses will be appended if it's the game-finishing move
+        if (gameState.gameStatus === GameStatuses.CHECKMATE) {
           const previousPlayer = gameState.blackToMove ? gameState.playerWhite.name : gameState.playerBlack.name;
           status = `Checkmate. ${previousPlayer} Won!`;
-        } else if (gameState.gameStatus === 'Draw') {
+        } else if (gameState.gameStatus === GameStatuses.DRAW) {
           status = 'Draw. Game Over.';
         }
       }
@@ -79,7 +74,6 @@ export default class GamePost extends React.PureComponent {
       return (
         <div>
           <div>
-            {/* was margin-right */}
             <span style={{marginRight: '5px'}}>
               {content}
             </span>
@@ -99,3 +93,15 @@ export default class GamePost extends React.PureComponent {
       );
     }
 }
+
+const styles = {
+  pieceIcon: {
+    display: 'inline',
+    width: '20px',
+    marginRight: '2px',
+    paddingBottom: '2px',
+  },
+  status: {
+    fontWeight: 'bold',
+  },
+};

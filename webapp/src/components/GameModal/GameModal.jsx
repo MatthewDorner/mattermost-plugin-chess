@@ -7,9 +7,11 @@ import Chess from 'chess.js';
 import getSiteURLFromWindowObject from '../../utils/GetSiteUrlFromWindowObject';
 import GameHistory from '../GameHistory.jsx';
 import {id as pluginId} from '../../manifest';
+import GameStatuses from '../../utils/GameStatuses';
 
 import '../../../node_modules/chessboardjs/www/css/chessboard.css';
-import './fix.css';
+import './chessboardFix.css';
+
 import '../../../node_modules/chessboardjs/www/img/chesspieces/wikipedia/bB.png';
 import '../../../node_modules/chessboardjs/www/img/chesspieces/wikipedia/bK.png';
 import '../../../node_modules/chessboardjs/www/img/chesspieces/wikipedia/bN.png';
@@ -32,11 +34,11 @@ export default class GameModal extends React.PureComponent {
 
   static propTypes = {
     visibility: PropTypes.bool.isRequired, // is undefined
+    postsInCurrentChannel: PropTypes.array.isRequired, // is undefined but is required
     setGameModalVisibility: PropTypes.func.isRequired,
     createPost: PropTypes.func.isRequired,
     currentUserId: PropTypes.string.isRequired,
     currentChannelId: PropTypes.string.isRequired,
-    postsInCurrentChannel: PropTypes.array.isRequired, // is undefined but is required
   }
 
   handleCancel = () => {
@@ -55,13 +57,14 @@ export default class GameModal extends React.PureComponent {
       return false;
     }
 
+    // COMMENT OUT THIS PART FOR EASIER TESTING WITH ONLY ONE USER LOGGED IN
     // only pick up if it's your turn to move
     // if ((this.props.currentUserId === this.state.gameState.playerBlack.id && this.game.turn() === 'w') ||
     //   (this.props.currentUserId === this.state.gameState.playerWhite.id && this.game.turn() === 'b')) {
     //   return false;
     // }
 
-    // opnly pick up if you're not browsing game history
+    // only pick up if you're not browsing game history
     if (this.game.fen().indexOf(this.board.fen()) === -1) {
       return false;
     }
@@ -82,11 +85,11 @@ export default class GameModal extends React.PureComponent {
       return 'snapback';
     }
 
-    let gameStatus = 'In Play';
+    let gameStatus = GameStatuses.IN_PLAY;
     if (this.game.in_checkmate()) {
-      gameStatus = 'Checkmate';
+      gameStatus = GameStatuses.CHECKMATE;
     } else if (this.game.in_draw()) {
-      gameStatus = 'Draw';
+      gameStatus = GameStatuses.DRAW;
     }
 
     const newGameState = {
@@ -150,7 +153,7 @@ export default class GameModal extends React.PureComponent {
           onDragStart: this.onDragStart,
           onDrop: this.onDrop,
           onSnapEnd: this.onSnapEnd,
-          position: this.state.gameState.gameStatus === 'New Game' ? 'start' : this.game.fen(),
+          position: this.state.gameState.gameStatus === GameStatuses.NEW_GAME ? 'start' : this.game.fen(),
         };
 
         this.board = chessBoard('chessboard', config);
@@ -167,11 +170,6 @@ export default class GameModal extends React.PureComponent {
     if (!this.state.gameState) {
       return false;
     }
-
-    const boardStyle = {
-      width: '50%',
-      float: 'right',
-    };
 
     this.game = new Chess();
     this.game.load_pgn(this.state.gameState.pgn);
@@ -190,7 +188,6 @@ export default class GameModal extends React.PureComponent {
       history.push(historyItem);
     });
 
-    // to fix: players aren't always same order as it appears in the channel title
     const titleString = `Chess: ${this.state.gameState.playerWhite.name} VS ${this.state.gameState.playerBlack.name}`;
 
     return (
@@ -216,7 +213,7 @@ export default class GameModal extends React.PureComponent {
           />
           <div
             id='boardcontainer'
-            style={boardStyle}
+            style={styles.board}
           >
             <div id='chessboard'/>
           </div>
@@ -234,3 +231,10 @@ export default class GameModal extends React.PureComponent {
     );
   }
 }
+
+const styles = {
+  board: {
+    width: '50%',
+    float: 'right',
+  },
+};
