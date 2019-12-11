@@ -9,8 +9,8 @@ const uuidv4 = require('uuid/v4');
 
 export default class ChallengeModal extends React.PureComponent {
   static propTypes = {
-    visibility: PropTypes.bool.isRequired, // is undefined
-    userToChallenge: PropTypes.object.isRequired, // is undefined
+    visibility: PropTypes.bool,
+    userToChallenge: PropTypes.object,
     setChallengeModalVisibility: PropTypes.func.isRequired,
     createPost: PropTypes.func.isRequired,
     getMe: PropTypes.func.isRequired,
@@ -46,7 +46,7 @@ export default class ChallengeModal extends React.PureComponent {
       team_id: this.props.currentTeamId,
       name: newChannelName,
       display_name: `Chess: ${newGameState.playerWhite.name} VS ${newGameState.playerBlack.name}`,
-      purpose: 'to play chess',
+      purpose: 'chess game',
       header: '',
       type: General.PRIVATE_CHANNEL,
     };
@@ -90,8 +90,10 @@ export default class ChallengeModal extends React.PureComponent {
   }
 
   render() {
-    const first = this.props.userToChallenge ? this.props.userToChallenge.first_name : '';
-    const last = this.props.userToChallenge ? this.props.userToChallenge.last_name : '';
+    // even though react-bootstrap Modal seems to handle this
+    if (!this.props.visibility || !this.props.userToChallenge) {
+      return false;
+    }
 
     return (
       <Modal
@@ -106,7 +108,7 @@ export default class ChallengeModal extends React.PureComponent {
             componentClass='h1'
             id='mattermost-chess_challengeModalLabel'
           >
-            {`Challenge ${first} ${last} to Chess`}
+            {`Challenge ${this.props.userToChallenge.first_name} ${this.props.userToChallenge.last_name} to Chess`}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>

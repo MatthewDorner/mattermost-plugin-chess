@@ -75,7 +75,7 @@ export default class GameHistory extends React.PureComponent {
       return (
         <option
           value={index}
-          key={formattedMovePgn}
+          key={`${index}${formattedMovePgn}`} // needs index since '... Kg8' etc can occur twice
         >
           {formattedMovePgn}
         </option>

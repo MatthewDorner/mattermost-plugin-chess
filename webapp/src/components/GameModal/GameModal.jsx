@@ -33,8 +33,8 @@ export default class GameModal extends React.PureComponent {
   }
 
   static propTypes = {
-    visibility: PropTypes.bool.isRequired, // is undefined
-    postsInCurrentChannel: PropTypes.array.isRequired, // is undefined but is required
+    visibility: PropTypes.bool,
+    postsInCurrentChannel: PropTypes.array,
     setGameModalVisibility: PropTypes.func.isRequired,
     createPost: PropTypes.func.isRequired,
     currentUserId: PropTypes.string.isRequired,
