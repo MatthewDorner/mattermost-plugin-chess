@@ -7,7 +7,6 @@ function gameModalVisibility(state = false, action) {
   case ActionTypes.SET_GAMEMODAL_VISIBILITY:
     return {
       visibility: action.data.visibility,
-      // gameState: action.data.gameState,
     };
   default:
     return state;
