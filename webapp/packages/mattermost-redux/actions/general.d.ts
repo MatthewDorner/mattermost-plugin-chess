@@ -1,0 +1,36 @@
+import { GeneralState } from "../types/general";
+import { LogLevel } from "../types/client4";
+import { ActionFunc } from "../types/actions";
+export declare function getPing(): ActionFunc;
+export declare function resetPing(): ActionFunc;
+export declare function getClientConfig(): ActionFunc;
+export declare function getDataRetentionPolicy(): ActionFunc;
+export declare function getLicenseConfig(): ActionFunc;
+export declare function logClientError(message: string, level?: LogLevel): ActionFunc;
+export declare function setAppState(state: GeneralState['appState']): ActionFunc;
+export declare function setDeviceToken(token: GeneralState['deviceToken']): ActionFunc;
+export declare function setServerVersion(serverVersion: string): ActionFunc;
+export declare function setStoreFromLocalData(data: {
+    token: string;
+    url: string;
+}): ActionFunc;
+export declare function getSupportedTimezones(): ActionFunc;
+export declare function setUrl(url: string): boolean;
+export declare function getRedirectLocation(url: string): ActionFunc;
+export declare function getWarnMetricsStatus(): ActionFunc;
+declare const _default: {
+    getPing: typeof getPing;
+    getClientConfig: typeof getClientConfig;
+    getDataRetentionPolicy: typeof getDataRetentionPolicy;
+    getSupportedTimezones: typeof getSupportedTimezones;
+    getLicenseConfig: typeof getLicenseConfig;
+    logClientError: typeof logClientError;
+    setAppState: typeof setAppState;
+    setDeviceToken: typeof setDeviceToken;
+    setServerVersion: typeof setServerVersion;
+    setStoreFromLocalData: typeof setStoreFromLocalData;
+    setUrl: typeof setUrl;
+    getRedirectLocation: typeof getRedirectLocation;
+    getWarnMetricsStatus: typeof getWarnMetricsStatus;
+};
+export default _default;

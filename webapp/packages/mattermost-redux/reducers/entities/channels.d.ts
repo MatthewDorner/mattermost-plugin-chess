@@ -1,0 +1,22 @@
+import { GenericAction } from "../../types/actions";
+import { Channel, ChannelStats } from "../../types/channels";
+import { RelationOneToOne } from "../../types/utilities";
+export declare function manuallyUnread(state: RelationOneToOne<Channel, boolean> | undefined, action: GenericAction): RelationOneToOne<Channel, boolean>;
+export declare function channelModerations(state: any, action: GenericAction): any;
+export declare function channelMemberCountsByGroup(state: any, action: GenericAction): any;
+export declare function channelsInPolicy(state: RelationOneToOne<Channel, Channel> | undefined, action: GenericAction): RelationOneToOne<Channel, Channel>;
+declare const _default: import("redux").Reducer<import("redux").CombinedState<{
+    currentChannelId: any;
+    channels: RelationOneToOne<Channel, Channel>;
+    channelsInTeam: any;
+    myMembers: any;
+    membersInChannel: any;
+    stats: RelationOneToOne<Channel, ChannelStats>;
+    groupsAssociatedToChannel: any;
+    totalCount: any;
+    manuallyUnread: RelationOneToOne<Channel, boolean>;
+    channelModerations: any;
+    channelMemberCountsByGroup: any;
+    channelsInPolicy: RelationOneToOne<Channel, Channel>;
+}>, import("redux").AnyAction>;
+export default _default;

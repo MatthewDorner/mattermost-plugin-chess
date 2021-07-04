@@ -1,10 +1,10 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {createPost} from 'mattermost-redux/actions/posts';
-import {createChannel, addChannelMember} from 'mattermost-redux/actions/channels';
-import {getCurrentTeamId} from 'mattermost-redux/selectors/entities/teams';
-import {getMe} from 'mattermost-redux/actions/users';
+import {createPost} from '../../../packages/mattermost-redux/actions/posts';
+import {createChannel, addChannelMember} from '../../../packages/mattermost-redux/actions/channels';
+import {getCurrentTeamId} from '../../../packages/mattermost-redux/selectors/entities/teams';
+import {getMe} from '../../../packages/mattermost-redux/actions/users';
 
 import {setChallengeModalVisibility} from '../../actions';
 import {id as pluginId} from '../../manifest';

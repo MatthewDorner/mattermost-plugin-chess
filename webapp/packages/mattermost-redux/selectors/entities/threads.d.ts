@@ -1,0 +1,13 @@
+import { GlobalState } from "../../types/store";
+import { Team } from "../../types/teams";
+import { UserThread, ThreadsState } from "../../types/threads";
+import { $ID, IDMappedObjects, RelationOneToMany } from "../../types/utilities";
+export declare function getThreadsInTeam(state: GlobalState): RelationOneToMany<Team, UserThread>;
+export declare const getThreadsInCurrentTeam: (state: GlobalState) => Array<$ID<UserThread>>;
+export declare function getThreadCounts(state: GlobalState): ThreadsState['counts'];
+export declare function getTeamThreadCounts(state: GlobalState, teamId: $ID<Team>): ThreadsState['counts'][$ID<Team>];
+export declare const getThreadCountsInCurrentTeam: (state: GlobalState) => ThreadsState['counts'][$ID<Team>];
+export declare function getThreads(state: GlobalState): IDMappedObjects<UserThread>;
+export declare function getThread(state: GlobalState, threadId: $ID<UserThread> | undefined): UserThread | null;
+export declare const getThreadOrderInCurrentTeam: (state: GlobalState, selectedThreadIdInTeam?: $ID<UserThread>) => Array<$ID<UserThread>>;
+export declare const getUnreadThreadOrderInCurrentTeam: (state: GlobalState, selectedThreadIdInTeam?: $ID<UserThread>) => Array<$ID<UserThread>>;

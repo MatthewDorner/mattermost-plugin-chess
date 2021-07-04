@@ -1,0 +1,15 @@
+import { DataRetentionCustomPolicies, DataRetentionCustomPolicy } from "../../types/data_retention";
+import { GlobalState } from "../../types/store";
+export declare function getLogs(state: GlobalState): string[];
+export declare function getAudits(state: GlobalState): import("../../types/utilities").Dictionary<import("../../types/audits").Audit>;
+export declare function getConfig(state: GlobalState): Partial<import("../../types/config").AdminConfig>;
+export declare function getLdapGroups(state: GlobalState): import("../../types/utilities").Dictionary<import("../../types/groups").MixedUnlinkedGroupRedux>;
+export declare function getLdapGroupsCount(state: GlobalState): number;
+export declare function getEnvironmentConfig(state: GlobalState): Partial<import("../../types/config").EnvironmentConfig>;
+export declare function getComplianceReports(state: GlobalState): import("../../types/utilities").Dictionary<import("../../types/compliance").Compliance>;
+export declare function getClusterInfo(state: GlobalState): import("../../types/admin").ClusterInfo[];
+export declare function getUserAccessTokens(state: GlobalState): import("../../types/utilities").Dictionary<import("../../types/users").UserAccessToken>;
+export declare function getDataRetentionCustomPolicies(state: GlobalState): DataRetentionCustomPolicies;
+export declare function getDataRetentionCustomPoliciesCount(state: GlobalState): number;
+export declare function getDataRetentionCustomPolicy(state: GlobalState, id: string): DataRetentionCustomPolicy;
+export declare function getAdminAnalytics(state: GlobalState): import("../../types/utilities").Dictionary<number | import("../../types/admin").AnalyticsRow[]> | undefined;

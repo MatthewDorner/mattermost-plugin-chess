@@ -1,6 +1,6 @@
 {
   "name": "webapp",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "This plugin allows Mattermost users to play chess with each other.",
   "main": "src/index.jsx",
   "scripts": {
@@ -37,13 +37,15 @@
     "webpack-cli": "3.3.5"
   },
   "dependencies": {
-    "chess.js": "^0.10.2",
+    "chess.js": "^0.12.0",
     "chessboardjs": "0.0.1",
-    "cm-chessboard": "^2.15.1",
-    "mattermost-redux": "^5.13.0",
-    "react-bootstrap": "github:mattermost/react-bootstrap#c6957962364e0818a51bbfd13e89919903b422d6",    
-    "react": "16.8.6",
-    "react-redux": "5.0.7",
-    "redux": "4.0.1"
+    "moment-timezone": "^0.5.33",
+    "react": "^17.0.2",
+    "react-bootstrap": "github:mattermost/react-bootstrap#c6957962364e0818a51bbfd13e89919903b422d6",
+    "react-redux": "^7.2.3",
+    "redux": "^4.1.0",
+    "reselect": "^4.0.0",
+    "serialize-error": "^8.1.0",
+    "shallow-equals": "^1.0.0"
   }
 }

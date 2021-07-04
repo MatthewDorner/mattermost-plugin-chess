@@ -1,0 +1,1 @@
+{"version":3,"file":"channel_categories.js","sourceRoot":"","sources":["../src/action_types/channel_categories.ts"],"names":[],"mappings":";AAAA,mEAAmE;AACnE,2CAA2C;;;AAE3C,2EAAyC;AAEzC,kBAAe,oBAAS,CAAC;IACrB,iBAAiB,EAAE,IAAI;IACvB,mBAAmB,EAAE,IAAI;IACzB,uBAAuB,EAAE,IAAI;IAE7B,kBAAkB,EAAE,IAAI;IACxB,iBAAiB,EAAE,IAAI;IAEvB,gBAAgB,EAAE,IAAI;CACzB,CAAC,CAAC"}

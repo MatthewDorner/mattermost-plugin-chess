@@ -1,0 +1,24 @@
+import { ActionFunc } from "../types/actions";
+import { Post } from "../types/posts";
+import { FileSearchResultItem } from "../types/files";
+import { SearchParameter } from "../types/search";
+export declare function getMissingChannelsFromPosts(posts: Map<string, Post>): ActionFunc;
+export declare function getMissingChannelsFromFiles(files: Map<string, FileSearchResultItem>): ActionFunc;
+export declare function searchPostsWithParams(teamId: string, params: SearchParameter): ActionFunc;
+export declare function searchPosts(teamId: string, terms: string, isOrSearch: boolean, includeDeletedChannels: boolean): ActionFunc;
+export declare function getMorePostsForSearch(): ActionFunc;
+export declare function clearSearch(): ActionFunc;
+export declare function searchFilesWithParams(teamId: string, params: SearchParameter): ActionFunc;
+export declare function searchFiles(teamId: string, terms: string, isOrSearch: boolean, includeDeletedChannels: boolean): ActionFunc;
+export declare function getMoreFilesForSearch(): ActionFunc;
+export declare function getFlaggedPosts(): ActionFunc;
+export declare function getPinnedPosts(channelId: string): ActionFunc;
+export declare function clearPinnedPosts(channelId: string): ActionFunc;
+export declare function getRecentMentions(): ActionFunc;
+export declare function removeSearchTerms(teamId: string, terms: string): ActionFunc;
+declare const _default: {
+    clearSearch: typeof clearSearch;
+    removeSearchTerms: typeof removeSearchTerms;
+    searchPosts: typeof searchPosts;
+};
+export default _default;

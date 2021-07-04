@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
-import {createPost} from 'mattermost-redux/actions/posts';
-import {getMe} from 'mattermost-redux/actions/users';
-import {getPostsInCurrentChannel} from 'mattermost-redux/selectors/entities/posts';
+import {createPost} from '../../../packages/mattermost-redux/actions/posts';
+import {getMe} from '../../../packages/mattermost-redux/actions/users';
+import {getPostsInCurrentChannel} from '../../../packages/mattermost-redux/selectors/entities/posts';
 import {bindActionCreators} from 'redux';
 
 import {setGameModalVisibility} from '../../actions';

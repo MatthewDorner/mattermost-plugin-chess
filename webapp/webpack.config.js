@@ -33,7 +33,7 @@ module.exports = {
                 },
                 modules: false,
                 debug: false,
-                useBuiltIns: 'usage',
+                // useBuiltIns: 'usage',
                 shippedProposals: true,
               }],
               ['@babel/preset-react', {

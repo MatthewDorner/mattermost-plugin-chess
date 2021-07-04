@@ -1,0 +1,18 @@
+import { ActionFunc } from "../types/actions";
+import { GroupPatch, SyncableType, SyncablePatch } from "../types/groups";
+export declare function linkGroupSyncable(groupID: string, syncableID: string, syncableType: SyncableType, patch: SyncablePatch): ActionFunc;
+export declare function unlinkGroupSyncable(groupID: string, syncableID: string, syncableType: SyncableType): ActionFunc;
+export declare function getGroupSyncables(groupID: string, syncableType: SyncableType): ActionFunc;
+export declare function patchGroupSyncable(groupID: string, syncableID: string, syncableType: SyncableType, patch: SyncablePatch): ActionFunc;
+export declare function getGroup(id: string): ActionFunc;
+export declare function getGroups(filterAllowReference: false, page?: number, perPage?: number): ActionFunc;
+export declare function getGroupsNotAssociatedToTeam(teamID: string, q?: string, page?: number, perPage?: number): ActionFunc;
+export declare function getGroupsNotAssociatedToChannel(channelID: string, q?: string, page?: number, perPage?: number, filterParentTeamPermitted?: boolean): ActionFunc;
+export declare function getAllGroupsAssociatedToTeam(teamID: string, filterAllowReference: false, includeMemberCount: false): ActionFunc;
+export declare function getAllGroupsAssociatedToChannelsInTeam(teamID: string, filterAllowReference: false): ActionFunc;
+export declare function getAllGroupsAssociatedToChannel(channelID: string, filterAllowReference: false, includeMemberCount: false): ActionFunc;
+export declare function getGroupsAssociatedToTeam(teamID: string, q: string | undefined, page: number | undefined, perPage: number | undefined, filterAllowReference: false): ActionFunc;
+export declare function getGroupsAssociatedToChannel(channelID: string, q?: string, page?: number, perPage?: number, filterAllowReference?: boolean): ActionFunc;
+export declare function patchGroup(groupID: string, patch: GroupPatch): ActionFunc;
+export declare function getGroupsByUserId(userID: string): ActionFunc;
+export declare function getGroupStats(groupID: string): ActionFunc;

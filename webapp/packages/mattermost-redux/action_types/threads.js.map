@@ -1,0 +1,1 @@
+{"version":3,"file":"threads.js","sourceRoot":"","sources":["../src/action_types/threads.ts"],"names":[],"mappings":";;;AAAA,mEAAmE;AACnE,2CAA2C;AAC3C,2EAAyC;AAEzC,kBAAe,oBAAS,CAAC;IACrB,eAAe,EAAE,IAAI;IACrB,gBAAgB,EAAE,IAAI;IACtB,mCAAmC,EAAE,IAAI;IACzC,qBAAqB,EAAE,IAAI;IAC3B,mBAAmB,EAAE,IAAI;IACzB,qBAAqB,EAAE,IAAI;CAC9B,CAAC,CAAC"}

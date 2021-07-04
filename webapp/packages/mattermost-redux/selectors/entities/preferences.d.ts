@@ -1,0 +1,31 @@
+import { PreferenceType, Theme } from "../../types/preferences";
+import { UserProfile } from "../../types/users";
+import { GlobalState } from "../../types/store";
+import { $ID } from "../../types/utilities";
+export declare function getMyPreferences(state: GlobalState): {
+    [x: string]: PreferenceType;
+};
+export declare function get(state: GlobalState, category: string, name: string, defaultValue?: any): any;
+export declare function getBool(state: GlobalState, category: string, name: string, defaultValue?: boolean): boolean;
+export declare function getInt(state: GlobalState, category: string, name: string, defaultValue?: number): number;
+export declare function makeGetCategory(): (state: GlobalState, category: string) => PreferenceType[];
+export declare function getDirectShowPreferences(state: GlobalState): PreferenceType[];
+export declare function getGroupShowPreferences(state: GlobalState): PreferenceType[];
+export declare function getFavoritesPreferences(state: GlobalState): string[];
+export declare const getVisibleTeammate: (state: GlobalState) => Array<$ID<UserProfile>>;
+export declare const getVisibleGroupIds: (state: GlobalState) => string[];
+export declare const getTeammateNameDisplaySetting: (state: GlobalState) => string | undefined;
+export declare const getTheme: (state: GlobalState) => Theme;
+export declare function makeGetStyleFromTheme<Style>(): (state: GlobalState, getStyleFromTheme: (theme: Theme) => Style) => Style;
+export declare type SidebarPreferences = {
+    grouping: 'by_type' | 'none';
+    unreads_at_top: 'true' | 'false';
+    favorite_at_top: 'true' | 'false';
+    sorting: 'alpha' | 'recent';
+};
+export declare const getSidebarPreferences: (state: GlobalState) => SidebarPreferences;
+export declare const shouldShowUnreadsCategory: (state: GlobalState) => boolean;
+export declare function shouldAutocloseDMs(state: GlobalState): boolean;
+export declare function getCollapsedThreadsPreference(state: GlobalState): string;
+export declare function isCollapsedThreadsAllowed(state: GlobalState): boolean;
+export declare function isCollapsedThreadsEnabled(state: GlobalState): boolean;

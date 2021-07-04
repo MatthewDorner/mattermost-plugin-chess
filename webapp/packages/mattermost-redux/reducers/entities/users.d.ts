@@ -1,0 +1,21 @@
+import { UserAccessToken, UserProfile } from "../../types/users";
+import { RelationOneToMany, RelationOneToOne, Dictionary } from "../../types/utilities";
+import { Team } from "../../types/teams";
+declare const _default: import("redux").Reducer<import("redux").CombinedState<{
+    currentUserId: any;
+    mySessions: any[];
+    myAudits: any[];
+    myUserAccessTokens: Dictionary<UserAccessToken>;
+    profiles: any;
+    profilesInTeam: RelationOneToMany<Team, UserProfile>;
+    profilesNotInTeam: RelationOneToMany<Team, UserProfile>;
+    profilesWithoutTeam: Set<unknown>;
+    profilesInChannel: any;
+    profilesNotInChannel: RelationOneToMany<Team, UserProfile>;
+    profilesInGroup: RelationOneToMany<Team, UserProfile>;
+    statuses: RelationOneToOne<UserProfile, string>;
+    isManualStatus: RelationOneToOne<UserProfile, boolean>;
+    stats: any;
+    filteredStats: any;
+}>, import("redux").AnyAction>;
+export default _default;

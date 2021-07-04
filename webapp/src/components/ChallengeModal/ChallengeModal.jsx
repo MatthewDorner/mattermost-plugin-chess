@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Modal} from 'react-bootstrap';
-import {General} from 'mattermost-redux/constants';
+import {General} from '../../../packages/mattermost-redux/constants/';
 
 import GameStatuses from '../../utils/GameStatuses';
 
@@ -25,12 +25,13 @@ export default class ChallengeModal extends React.PureComponent {
     const me = await this.props.getMe();
     const mePlayer = {
       id: me.data.id,
-      name: me.data.first_name,
+      name: `@${me.data.username}`,
     };
     const challengePlayer = {
       id: this.props.userToChallenge.id,
-      name: this.props.userToChallenge.first_name,
+      name: `@${this.props.userToChallenge.username}`,
     };
+
     const mePlaysWhite = (Math.random() < (1 / 2));
     const newGameState = {
       playerWhite: mePlaysWhite ? mePlayer : challengePlayer,
@@ -108,7 +109,7 @@ export default class ChallengeModal extends React.PureComponent {
             componentClass='h1'
             id='mattermost-chess_challengeModalLabel'
           >
-            {`Challenge ${this.props.userToChallenge.first_name} ${this.props.userToChallenge.last_name} to Chess`}
+            {`Challenge @${this.props.userToChallenge.username} to Chess`}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>

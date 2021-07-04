@@ -1,0 +1,32 @@
+import { GlobalState } from "../types/store";
+import { PreferenceType } from "../types/preferences";
+import { Post, PostType, PostMetadata, PostEmbed } from "../types/posts";
+import { UserProfile } from "../types/users";
+import { Team } from "../types/teams";
+import { Channel } from "../types/channels";
+import { $ID } from "../types/utilities";
+export declare function isPostFlagged(postId: $ID<Post>, myPreferences: {
+    [x: string]: PreferenceType;
+}): boolean;
+export declare function isSystemMessage(post: Post): boolean;
+export declare function isMeMessage(post: Post): boolean;
+export declare function isFromWebhook(post: Post): boolean;
+export declare function isPostEphemeral(post: Post): boolean;
+export declare function shouldIgnorePost(post: Post, userId?: $ID<UserProfile>): boolean;
+export declare function isUserActivityPost(postType: PostType): boolean;
+export declare function isPostOwner(userId: $ID<UserProfile>, post: Post): boolean;
+export declare function isEdited(post: Post): boolean;
+export declare function canDeletePost(state: GlobalState, config: any, license: any, teamId: $ID<Team>, channelId: $ID<Channel>, userId: $ID<UserProfile>, post: Post, isAdmin: boolean, isSystemAdmin: boolean): boolean;
+export declare function canEditPost(state: GlobalState, config: any, license: any, teamId: $ID<Team>, channelId: $ID<Channel>, userId: $ID<UserProfile>, post: Post): boolean;
+export declare function getLastCreateAt(postsArray: Post[]): number;
+export declare function shouldFilterJoinLeavePost(post: Post, showJoinLeave: boolean, currentUsername: string): boolean;
+export declare function isPostPendingOrFailed(post: Post): boolean;
+export declare function comparePosts(a: Post, b: Post): number;
+export declare function isPostCommentMention({ post, currentUser, threadRepliedToByCurrentUser, rootPost }: {
+    post: Post;
+    currentUser: UserProfile;
+    threadRepliedToByCurrentUser: boolean;
+    rootPost: Post;
+}): boolean;
+export declare function fromAutoResponder(post: Post): boolean;
+export declare function getEmbedFromMetadata(metadata: PostMetadata): PostEmbed | null;

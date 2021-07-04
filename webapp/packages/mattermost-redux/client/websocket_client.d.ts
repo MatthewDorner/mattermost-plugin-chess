@@ -1,0 +1,31 @@
+declare class WebSocketClient {
+    conn?: WebSocket;
+    connectionUrl: null;
+    token: string | null;
+    sequence: number;
+    connectFailCount: number;
+    eventCallback?: (message: any) => void;
+    firstConnectCallback?: () => void;
+    reconnectCallback?: () => void;
+    errorCallback?: (event: Event) => void;
+    closeCallback?: (connectFailCount: number) => void;
+    connectingCallback?: () => void;
+    stop: boolean;
+    platform: string;
+    connectionTimeout: any;
+    constructor();
+    initialize(token: string | null, opts: any): Promise<void>;
+    setConnectingCallback(callback: () => void): void;
+    setEventCallback(callback: (message: any) => void): void;
+    setFirstConnectCallback(callback: () => void): void;
+    setReconnectCallback(callback: () => void): void;
+    setErrorCallback(callback: (event: Event) => void): void;
+    setCloseCallback(callback: (connectFailCount: number) => void): void;
+    close(stop?: boolean): void;
+    sendMessage(action: string, data: any): void;
+    userTyping(channelId: string, parentId: string): void;
+    getStatuses(): void;
+    getStatusesByIds(userIds: string[]): void;
+}
+declare const _default: WebSocketClient;
+export default _default;
