@@ -1,2 +1,2 @@
 export const id = 'com.matthewdorner.mattermost-plugin-chess';
-export const version = '1.1.0';
+export const version = '1.1.1';

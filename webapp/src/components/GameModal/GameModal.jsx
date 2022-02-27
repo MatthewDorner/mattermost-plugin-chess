@@ -9,6 +9,9 @@ import GameHistory from '../GameHistory.jsx';
 import {id as pluginId} from '../../manifest';
 import GameStatuses from '../../utils/GameStatuses';
 
+import $ from "jquery";
+window.$ = $;
+
 import '../../../node_modules/chessboardjs/www/css/chessboard.css';
 import './chessboardFix.css';
 
