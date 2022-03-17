@@ -13,7 +13,7 @@ var general_1 = require("../selectors/entities/general");
 var Selectors = tslib_1.__importStar(require("../selectors/entities/posts"));
 var users_1 = require("../selectors/entities/users");
 var emoji_utils_1 = require("../utils/emoji_utils");
-var post_list_1 = require("../utils/post_list");
+// var post_list_1 = require("../utils/post_list");
 var emojis_2 = require("./emojis");
 var errors_1 = require("./errors");
 var helpers_1 = require("./helpers");
@@ -418,55 +418,55 @@ function getUnreadPostData(unreadChan, state) {
     };
     return data;
 }
-function setUnreadPost(userId, postId) {
-    var _this = this;
-    return function (dispatch, getState) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
-        var state, post, unreadChan, error_4, data;
-        return tslib_1.__generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    state = getState();
-                    post = Selectors.getPost(state, postId);
-                    _a.label = 1;
-                case 1:
-                    _a.trys.push([1, 3, , 4]);
-                    if (post_list_1.isCombinedUserActivityPost(postId)) {
-                        return [2 /*return*/, {}];
-                    }
-                    return [4 /*yield*/, client_1.Client4.markPostAsUnread(userId, postId)];
-                case 2:
-                    unreadChan = _a.sent();
-                    dispatch({
-                        type: action_types_1.ChannelTypes.ADD_MANUALLY_UNREAD,
-                        data: {
-                            channelId: post.channel_id,
-                        },
-                    });
-                    return [3 /*break*/, 4];
-                case 3:
-                    error_4 = _a.sent();
-                    helpers_1.forceLogoutIfNecessary(error_4, dispatch, getState);
-                    dispatch(errors_1.logError(error_4));
-                    dispatch({
-                        type: action_types_1.ChannelTypes.REMOVE_MANUALLY_UNREAD,
-                        data: {
-                            channelId: post.channel_id,
-                        },
-                    });
-                    return [2 /*return*/, { error: error_4 }];
-                case 4:
-                    state = getState();
-                    data = getUnreadPostData(unreadChan, state);
-                    dispatch({
-                        type: action_types_1.ChannelTypes.POST_UNREAD_SUCCESS,
-                        data: data,
-                    });
-                    return [2 /*return*/, { data: data }];
-            }
-        });
-    }); };
-}
-exports.setUnreadPost = setUnreadPost;
+// function setUnreadPost(userId, postId) {
+//     var _this = this;
+//     return function (dispatch, getState) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+//         var state, post, unreadChan, error_4, data;
+//         return tslib_1.__generator(this, function (_a) {
+//             switch (_a.label) {
+//                 case 0:
+//                     state = getState();
+//                     post = Selectors.getPost(state, postId);
+//                     _a.label = 1;
+//                 case 1:
+//                     _a.trys.push([1, 3, , 4]);
+//                     if (post_list_1.isCombinedUserActivityPost(postId)) {
+//                         return [2 /*return*/, {}];
+//                     }
+//                     return [4 /*yield*/, client_1.Client4.markPostAsUnread(userId, postId)];
+//                 case 2:
+//                     unreadChan = _a.sent();
+//                     dispatch({
+//                         type: action_types_1.ChannelTypes.ADD_MANUALLY_UNREAD,
+//                         data: {
+//                             channelId: post.channel_id,
+//                         },
+//                     });
+//                     return [3 /*break*/, 4];
+//                 case 3:
+//                     error_4 = _a.sent();
+//                     helpers_1.forceLogoutIfNecessary(error_4, dispatch, getState);
+//                     dispatch(errors_1.logError(error_4));
+//                     dispatch({
+//                         type: action_types_1.ChannelTypes.REMOVE_MANUALLY_UNREAD,
+//                         data: {
+//                             channelId: post.channel_id,
+//                         },
+//                     });
+//                     return [2 /*return*/, { error: error_4 }];
+//                 case 4:
+//                     state = getState();
+//                     data = getUnreadPostData(unreadChan, state);
+//                     dispatch({
+//                         type: action_types_1.ChannelTypes.POST_UNREAD_SUCCESS,
+//                         data: data,
+//                     });
+//                     return [2 /*return*/, { data: data }];
+//             }
+//         });
+//     }); };
+// }
+// exports.setUnreadPost = setUnreadPost;
 function pinPost(postId) {
     var _this = this;
     return function (dispatch, getState) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
