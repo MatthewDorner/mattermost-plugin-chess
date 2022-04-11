@@ -6,7 +6,7 @@ Chess plugin for Mattermost
 This plugin allows Mattermost users to have their conversations over a game of chess.
 
 #### Installation
-- Download the .tar.gz bundle from https://github.com/MatthewDorner/mattermost-plugin-chess/releases/download/v1.1.0/com.matthewdorner.mattermost-plugin-chess-1.1.0.tar.gz.
+- Download the .tar.gz bundle from https://github.com/MatthewDorner/mattermost-plugin-chess/releases/download/v1.1.2/com.matthewdorner.mattermost-plugin-chess-1.1.2.tar.gz.
 - In your server's `config.json` file, set `PluginSettings.EnableUploads` to `true`. Restart server if necessary.
 - Upload the plugin bundle from your Mattermost System Console -> Plugin Management page.
 - You should see the plugin appear in the Plugin Management page under Installed Plugins.
