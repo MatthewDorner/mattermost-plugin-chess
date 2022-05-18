@@ -1,3 +1,9 @@
-.piece-417db {
+.cm-chessboard-draggable-piece {
   z-index: 4000!important;
+}
+
+.chessPieceIconContainer svg {
+  width: 25px;
+  margin-right: 3px;
+  vertical-align: bottom;
 }

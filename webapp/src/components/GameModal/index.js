@@ -1,9 +1,9 @@
 import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+
 import {createPost} from '../../../packages/mattermost-redux/actions/posts';
 import {getMe} from '../../../packages/mattermost-redux/actions/users';
 import {getPostsInCurrentChannel} from '../../../packages/mattermost-redux/selectors/entities/posts';
-import {bindActionCreators} from 'redux';
-
 import {setGameModalVisibility} from '../../actions';
 
 import {id as pluginId} from '../../manifest';

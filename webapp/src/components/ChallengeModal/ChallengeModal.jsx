@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Modal} from 'react-bootstrap';
+
 import {General} from '../../../packages/mattermost-redux/constants/';
 
 import GameStatuses from '../../utils/GameStatuses';
@@ -68,22 +69,12 @@ export default class ChallengeModal extends React.PureComponent {
     post.pending_post_id = `${userId}:${time}`;
     post.user_id = userId;
     post.create_at = time;
-
-    // post.parent_id = this.state.parentId;
-    // post.parent_id = undefined; // what is this?
     post.metadata = {};
     post.props = {};
     post.type = 'custom_chess-game-post';
     await this.props.createPost(post);
 
     this.props.setChallengeModalVisibility(false);
-
-    // used mattermost-redux/actions/actions/channels selectChannel here but it doesn't work.
-    // the channel switches but just says "loading..." and never updates
-    // there is some code in mattermost-webapp new_channel_flow, which uses
-    // switchToChannel when creating a new channel, which itself uses selectChannel in some way
-    // but switchToChannel is from global_actions in mattermost-webapp so I can't use it?
-    // this.props.selectChannel(newChannelId);
   }
 
   handleCancel = () => {
@@ -91,7 +82,6 @@ export default class ChallengeModal extends React.PureComponent {
   }
 
   render() {
-    // even though react-bootstrap Modal seems to handle this
     if (!this.props.visibility || !this.props.userToChallenge) {
       return false;
     }
