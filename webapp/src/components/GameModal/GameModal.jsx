@@ -139,43 +139,45 @@ export default class GameModal extends React.PureComponent {
       window.requestAnimationFrame(() => {
         const siteUrl = getSiteURLFromWindowObject(window);
 
-        if (document.getElementsByClassName('cm-chessboard').length === 0) {
-          this.board = new Chessboard(
-            document.getElementById('chessboard'),
-            {
-              position: this.state.gameState.gameStatus === GameStatuses.NEW_GAME ? 'start' : this.game.fen(),
-              orientation: (this.props.currentUserId === this.state.gameState.playerBlack.id) ? COLOR.black : COLOR.white,
-              style: {
-                cssClass: 'default',
-                showCoordinates: true, // show ranks and files
-                borderType: BORDER_TYPE.thin, // thin: thin border, frame: wide border with coordinates in it, none: no border
-                aspectRatio: 1, // height/width. Set to `undefined`, if you want to define it only in the css.
-                moveFromMarker: null, // the marker used to mark the start square
-                moveToMarker: null, // the marker used to mark the square where the figure is moving to
-              },
-              responsive: true, // resizes the board based on element size
-              animationDuration: 300, // pieces animation duration in milliseconds
-              sprite: {
-                url: `${siteUrl}/static/plugins/${pluginId}/chessboard-sprite-staunty.svg`, // pieces and markers are stored as svg sprite
-                size: 40, // the sprite size, defaults to 40x40px
-                cache: true, // cache the sprite inline, in the HTML
-              },
-            },
-          );
-
-          this.board.enableMoveInput((event) => {
-            switch (event.type) {
-            case INPUT_EVENT_TYPE.moveStart:
-              return this.handleMoveStart(event);
-            case INPUT_EVENT_TYPE.moveDone:
-              return this.handleMoveDone(event);
-            case INPUT_EVENT_TYPE.moveCanceled:
-              return true;
-            default:
-              return true;
-            }
-          });
+        if (document.getElementsByClassName('cm-chessboard').length > 0) {
+          document.getElementsByClassName('cm-chessboard')[0].remove();
         }
+
+        this.board = new Chessboard(
+          document.getElementById('chessboard'),
+          {
+            position: this.state.gameState.gameStatus === GameStatuses.NEW_GAME ? 'start' : this.game.fen(),
+            orientation: (this.props.currentUserId === this.state.gameState.playerBlack.id) ? COLOR.black : COLOR.white,
+            style: {
+              cssClass: 'default',
+              showCoordinates: true, // show ranks and files
+              borderType: BORDER_TYPE.thin, // thin: thin border, frame: wide border with coordinates in it, none: no border
+              aspectRatio: 1, // height/width. Set to `undefined`, if you want to define it only in the css.
+              moveFromMarker: null, // the marker used to mark the start square
+              moveToMarker: null, // the marker used to mark the square where the figure is moving to
+            },
+            responsive: true, // resizes the board based on element size
+            animationDuration: 300, // pieces animation duration in milliseconds
+            sprite: {
+              url: `${siteUrl}/static/plugins/${pluginId}/chessboard-sprite-staunty.svg`, // pieces and markers are stored as svg sprite
+              size: 40, // the sprite size, defaults to 40x40px
+              cache: true, // cache the sprite inline, in the HTML
+            },
+          },
+        );
+
+        this.board.enableMoveInput((event) => {
+          switch (event.type) {
+          case INPUT_EVENT_TYPE.moveStart:
+            return this.handleMoveStart(event);
+          case INPUT_EVENT_TYPE.moveDone:
+            return this.handleMoveDone(event);
+          case INPUT_EVENT_TYPE.moveCanceled:
+            return true;
+          default:
+            return true;
+          }
+        });
       });
     }
   }
